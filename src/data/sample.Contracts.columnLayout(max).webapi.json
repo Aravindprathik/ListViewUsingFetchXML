@@ -1,0 +1,100 @@
+[
+  {
+    "key": "contractnumber",
+    "fieldName": "contractnumber",
+    "name": "Contract #",
+    "minWidth": 60,
+    "maxWidth": 100
+  },
+  {
+    "key": "contractid",
+    "fieldName": "contractid",
+    "name": "Contract Link",
+    "minWidth": 60,
+    "maxWidth": 70,
+    "data": {
+      "url": "[BASE_ENVIRONMENT_URL]/main.aspx?etc=1010&pagetype=entityrecord&id=[ID]",
+      "urlLinkText": "Contract Link"
+    }
+  },
+  {
+    "key": "title",
+    "fieldName": "title",
+    "name": "Contract Title",
+    "minWidth": 100,
+    "maxWidth": 170
+  },
+  {
+    "key": "statuscode",
+    "fieldName": "statuscode",
+    "name": "Contract Status",
+    "minWidth": 50,
+    "maxWidth": 70
+  },
+  {
+    "key": "createdon",
+    "fieldName": "createdon",
+    "name": "Created On",
+    "minWidth": 50,
+    "mmaxWidth": 60,
+    "data": {
+      "dateFormat": "yyyy-MM-dd"
+    }
+  },
+  {
+    "key": "activeon",
+    "fieldName": "activeon",
+    "name": "Contract Start Date",
+    "minWidth": 50,
+    "mmaxWidth": 60,
+    "data": {
+      "dateFormat": "yyyy-MM-dd"
+    }
+  },
+  {
+    "key": "expireson",
+    "fieldName": "expireson",
+    "name": "Contract End Date",
+    "minWidth": 50,
+    "mmaxWidth": 60,
+    "data": {
+      "dateFormat": "yyyy-MM-dd"
+    }
+  },
+  {
+    "key": "duration",
+    "fieldName": "duration",
+    "name": "Duration (Days)",
+    "minWidth": 30,
+    "data": {
+      "type": "number"
+    }
+  },
+  {
+    "key": "_modifiedby_value",
+    "fieldName": "_modifiedby_value",
+    "name": "Modified By",
+    "minWidth": 100,
+    "mmaxWidth": 120,
+    "data": {
+      "entityLinking": true
+    }
+  },
+  {
+    "key": "owninguser.internalemailaddress",
+    "fieldName": "owninguser.internalemailaddress",
+    "name": "Owning User Email",
+    "minWidth": 100,
+    "mmaxWidth": 120
+  },
+  {
+    "key": "mcaogs_contractlink",
+    "fieldName": "mcaogs_contractlink",
+    "name": "Contract Link",
+    "minWidth": 100,
+    "data": {
+      "url": "[USE_VALUE]",
+      "urlLinkText": "[USE_VALUE]"
+    }
+  }
+]
