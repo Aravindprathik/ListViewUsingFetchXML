@@ -1,9 +1,11 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
+import "@cloudscape-design/global-styles/index.css"
 import * as React from "react";
 import ReactDOM = require("react-dom");
 import { GetSampleData } from "./GetSampleData";
-import { DynamicDetailsList } from "./DynamicDetailsList";
 import { IColumn } from "@fluentui/react";
+import { DetailsListDocumentsExample } from "./DynamicDetailsList";
+import { CloudScapeTable } from "./CloudScapeUI/CloudScapeTable";
 
 export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInputs, IOutputs> {
     private theComponent: ComponentFramework.ReactControl<IInputs, IOutputs>;
@@ -178,8 +180,9 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
      */
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
         // debugger;  // eslint-disable-line no-debugger
-        let props = {  columns: this._columnLayout, primaryEntityName: this._primaryEntityName, fetchXml: this._fetchXML, isDebugMode: this._isDebugMode, context: context, baseD365Url: this._baseEnvironmentUrl };
-        return React.createElement(DynamicDetailsList, props, {});
+       // let props = {  columns: this._columnLayout, primaryEntityName: this._primaryEntityName, fetchXml: this._fetchXML, isDebugMode: this._isDebugMode, context: context, baseD365Url: this._baseEnvironmentUrl };
+       // return React.createElement(DetailsListDocumentsExample, props, {});
+        return React.createElement(CloudScapeTable);
 
         // TODO: Is it possible to support a grid without a columnlayout?
         // i.e. Create a default columnListLayout from the data
