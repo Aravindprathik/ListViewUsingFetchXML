@@ -55,7 +55,7 @@ export const CloudScapeTable: React.FC<any> = () => {
   } = useCollection(announcementsTableEntity, {
     propertyFiltering: {
       filteringProperties,
-      empty: <TableEmptyState resourceName="Announcements" />,
+      empty: <TableEmptyState resourceName="KPI Results" />,
       noMatch: (
         <TableNoMatchState
           onClearFilter={() => {
@@ -70,7 +70,7 @@ export const CloudScapeTable: React.FC<any> = () => {
     sorting: {
       defaultState: {
         sortingColumn: {
-          sortingField: "announcementDate",
+          sortingField: "fullname",
           // sortingComparator: (a: AnnouncementFlatTableEntity, b: AnnouncementFlatTableEntity) => {
           //   return dateTimeComparatorForTable(a.announcementDate, b.announcementDate);
           // },
@@ -83,10 +83,10 @@ export const CloudScapeTable: React.FC<any> = () => {
   return (
     <>
       <Table
-        variant="full-page"
+        variant="embedded"
         stickyHeader={true}
         loading={false}
-        loadingText={"Loading announcements..."}
+        loadingText={"Loading Results..."}
         items={items}
         selectionType={"single"}
         selectedItems={selectedAnnouncements}
@@ -103,9 +103,9 @@ export const CloudScapeTable: React.FC<any> = () => {
         contentDensity={preferences.contentDensity}
         header={
           <Header
-            description={`Post general or product specific announcements which users can see on the homepage and app-specific landing pages`}
+            description={``}
           >
-            {`Announcements`}
+            {`Search`}
           </Header>
         }
         filter={

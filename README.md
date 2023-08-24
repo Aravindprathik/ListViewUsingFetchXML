@@ -312,4 +312,5 @@ Another option if it's a date issue is to be sure to use a dateFormat in the col
 - If you have fewer fields, the column widths are not right.  But with enough fields, it seems to space them out fine.
 
 
-  
+  #   L i s t V i e w U s i n g F e t c h X M L  
+ 
