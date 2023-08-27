@@ -13,7 +13,7 @@ import { Preferences, TableEmptyState, TableNoMatchState, getMatchesCountText, p
 import { useCollection } from "@cloudscape-design/collection-hooks";
 import React = require("react");
 
-export interface CloudscapeTableProps {
+interface CloudscapeTableProps {
   allColumns: DynamicColumnDetails;
   allItems: any[];
 }

@@ -1,10 +1,9 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import "@cloudscape-design/global-styles/index.css"
 import * as React from "react";
-import ReactDOM = require("react-dom");
-import CloudscapeTable, { CloudscapeTableProps } from "./CloudScapeUI/CloudscapeTable";
-import { DynamicColumns } from "./MockData/AllColumns";
 import { RowData } from "./MockData/AllItems";
+import { DynamicColumns } from "./MockData/AllColumns";
+import CloudscapeTable from "./Components/CloudscapeTable/CloudscapeTable";
 
 export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInputs, IOutputs> {
     private theComponent: ComponentFramework.ReactControl<IInputs, IOutputs>;
@@ -180,7 +179,7 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
         // debugger;  // eslint-disable-line no-debugger
         let props = { columns: this._columnLayout, primaryEntityName: this._primaryEntityName, fetchXml: this._fetchXML, isDebugMode: this._isDebugMode, context: context, baseD365Url: this._baseEnvironmentUrl };
-        let props1: CloudscapeTableProps = {
+        let props1 = {
             allColumns: DynamicColumns,
             allItems: RowData
         }

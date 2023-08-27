@@ -1,6 +1,7 @@
 import { FilteringProperty, PropertyFilterProps } from "@cloudscape-design/components/property-filter/interfaces";
 import { ColumnDataType, DataEntity, DynamicColumnDetails } from "./CloudscapeInterface";
 import { CollectionPreferencesProps, TableProps } from "@cloudscape-design/components";
+import { getDataToDisplay } from "./CellComponents";
 
 export const DEFAULT_PAGE_SIZE_IS_100 = 100;
 export const BLANK_SEARCH_AND = {
@@ -58,7 +59,7 @@ export function generateColumnDefinitions(dynamicColumnDetails: DynamicColumnDet
       id: dataEntity.fieldName,
       header: dataEntity.displayName,
       width: dataEntity.minWidth,
-      cell: (item: any) => item[dataEntity.fieldName],
+      cell: (item: any) => getDataToDisplay(item, dataEntity),
     } as TableProps.ColumnDefinition<DataEntity>;
   });
 
