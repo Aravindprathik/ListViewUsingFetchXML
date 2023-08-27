@@ -1,5 +1,4 @@
 import { CollectionPreferencesProps, Pagination, PropertyFilter, PropertyFilterProps, Table, TableProps } from "@cloudscape-design/components";
-import { useEffect } from "react";
 import {
   BLANK_SEARCH_AND,
   DEFAULT_PAGE_SIZE_IS_100,
@@ -11,11 +10,14 @@ import {
 import { DynamicColumnDetails } from "./CloudscapeInterface";
 import { Preferences, TableEmptyState, TableNoMatchState, getMatchesCountText, paginationAriaLabels, propertyFilterI18nStrings } from "../GenericComponents/Utils";
 import { useCollection } from "@cloudscape-design/collection-hooks";
-import React = require("react");
+import * as React from "react";
+import { useEffect } from "react";
 
 interface CloudscapeTableProps {
   allColumns: DynamicColumnDetails;
   allItems: any[];
+  kpiEntityId: string;
+  kpiEntityName:string;
 }
 const CloudscapeTable: React.FC<CloudscapeTableProps> = ({ allColumns, allItems }) => {
   const [tableDefaultPreferences, setTableDefaultPreferences] = React.useState<CollectionPreferencesProps.Preferences>({});
@@ -56,6 +58,8 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({ allColumns, allItems 
     const properties = generateFilteringProperties(allColumns);
     setFilteringProperties(properties);
   }, [allColumns]);
+
+  
 
   const { items, actions, filteredItemsCount, collectionProps, paginationProps, propertyFilterProps } = useCollection(tableRowData, {
     propertyFiltering: {

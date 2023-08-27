@@ -1,9 +1,9 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
-import "@cloudscape-design/global-styles/index.css"
-import * as React from "react";
+import "@cloudscape-design/global-styles/index.css";
 import { RowData } from "./MockData/AllItems";
 import { DynamicColumns } from "./MockData/AllColumns";
 import CloudscapeTable from "./Components/CloudscapeTable/CloudscapeTable";
+import * as React from "react";
 
 export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInputs, IOutputs> {
     private theComponent: ComponentFramework.ReactControl<IInputs, IOutputs>;
@@ -15,6 +15,8 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
     private _isDebugMode: boolean;
     private _baseEnvironmentUrl?: string;
     private _itemsPerPage: number | null;
+    private _kpiEntityId : string;
+    private _kpiEntityName : string;
     // private _totalNumberOfRecords: number;    
 
     /** General */
@@ -73,17 +75,23 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
         // const recordIdLookupValue: ComponentFramework.EntityReference = this._context.parameters.RecordId.raw[0];
 
         // Other values if we need them
+        this._kpiEntityId = this._context.parameters.KPILookup.raw[0].id;
+        this._kpiEntityName = this._context.parameters.KPILookup.raw[0].entityType;
+        console.log("kpiEntityId : ",this._kpiEntityId, " kpiEntityName : ", this._kpiEntityName);
         let entityId = (<any>this._context.mode).contextInfo.entityId;
         let entityTypeName = (<any>this._context.mode).contextInfo.entityTypeName;
         let entityDisplayName = (<any>this._context.mode).contextInfo.entityRecordName;
+        console.log("entityTypeName : ",entityTypeName, " entityDisplayName : ", entityDisplayName);
         // This breaks when you use the PCF Test Harness.  Neat!
         try {
             this._baseEnvironmentUrl = (<any>this._context)?.page?.getClientUrl();
+            console.log("_baseEnvironmentUrl : ",this._baseEnvironmentUrl, " entityDisplayName : ", entityDisplayName);
         }
         catch (ex) {
             this._baseEnvironmentUrl = "https://localhost";
         }
         var recordId: string = entityId; //this._context.parameters.RecordId.raw ?? currentRecordId;
+
 
         // See if we can use an Id from a lookup field specified on the current form
         // Wish we could use the Lookup property type, but doesn't appear to be supported yet
@@ -181,7 +189,9 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
         let props = { columns: this._columnLayout, primaryEntityName: this._primaryEntityName, fetchXml: this._fetchXML, isDebugMode: this._isDebugMode, context: context, baseD365Url: this._baseEnvironmentUrl };
         let props1 = {
             allColumns: DynamicColumns,
-            allItems: RowData
+            allItems: RowData,
+            kpiEntityId :this._kpiEntityId,
+            kpiEntityName : this._kpiEntityName
         }
         return React.createElement(CloudscapeTable, props1);
 

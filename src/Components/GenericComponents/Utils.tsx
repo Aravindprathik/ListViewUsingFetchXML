@@ -39,7 +39,7 @@ export const propertyFilterI18nStrings: (resource?: any) => PropertyFilterProps.
   dismissAriaLabel: "Dismiss",
   clearAriaLabel: "Clear",
 
-  filteringPlaceholder: `Filter ${resource} by text, property or value`,
+  filteringPlaceholder: `Filter by keyword`,
   groupValuesText: "Values",
   groupPropertiesText: "Tag",
   operatorsText: "Operators",

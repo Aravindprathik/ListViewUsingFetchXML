@@ -109,7 +109,7 @@ export const DynamicColumns: DynamicColumnDetails = {
       }
     },
     {
-      "fieldName": "statuscode",
+      "fieldName": "statuscode@OData.Community.Display.V1.FormattedValue",
       "displayName": "Lead Status",
       "minWidth": 80,
       "maxWidth": 100,
