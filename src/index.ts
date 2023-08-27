@@ -2,10 +2,9 @@ import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import "@cloudscape-design/global-styles/index.css"
 import * as React from "react";
 import ReactDOM = require("react-dom");
-import { GetSampleData } from "./GetSampleData";
-import { IColumn } from "@fluentui/react";
-import { DetailsListDocumentsExample } from "./DynamicDetailsList";
-import { CloudScapeTable } from "./CloudScapeUI/CloudScapeTable";
+import CloudscapeTable, { CloudscapeTableProps } from "./CloudScapeUI/CloudscapeTable";
+import { DynamicColumns } from "./MockData/AllColumns";
+import { RowData } from "./MockData/AllItems";
 
 export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInputs, IOutputs> {
     private theComponent: ComponentFramework.ReactControl<IInputs, IOutputs>;
@@ -13,16 +12,16 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
 
     private _primaryEntityName: string;
     private _fetchXML: string | null;
-    private _columnLayout: Array<IColumn>;
+    private _columnLayout: Array<any>;
     private _isDebugMode: boolean;
     private _baseEnvironmentUrl?: string;
     private _itemsPerPage: number | null;
     // private _totalNumberOfRecords: number;    
 
-     /** General */
-     private _context: ComponentFramework.Context<IInputs>;
-     private _notifyOutputChanged: () => void;
-     private _container: HTMLDivElement;
+    /** General */
+    private _context: ComponentFramework.Context<IInputs>;
+    private _notifyOutputChanged: () => void;
+    private _container: HTMLDivElement;
 
     /**
      * Empty constructor.
@@ -39,10 +38,10 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
     public init(
         context: ComponentFramework.Context<IInputs>,
         notifyOutputChanged: () => void,
-        state: ComponentFramework.Dictionary, 
+        state: ComponentFramework.Dictionary,
         container: HTMLDivElement
     ): void {
-        this.notifyOutputChanged = notifyOutputChanged;      
+        this.notifyOutputChanged = notifyOutputChanged;
         this.initVars(context, notifyOutputChanged, container);
     }
 
@@ -52,7 +51,7 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
         this._container = container;
         this._isDebugMode = false;
         this._itemsPerPage = 5000;
-        
+
         if (this._context.parameters.DebugMode) {
             this._isDebugMode = this._context.parameters.DebugMode.raw == "1";
         }
@@ -65,13 +64,13 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
         if (this._context.parameters.ItemsPerPage) {
             this._itemsPerPage = this._context.parameters.ItemsPerPage.raw;
         }
-        
+
         // TODO: Validate the input parameters to make sure we get a friendly error instead of weird errors
-        var fetchXML : string | null = this._context.parameters.FetchXml.raw; 
-        var recordIdPlaceholder : string | null = this._context.parameters.RecordIdPlaceholder.raw; // ?? "";  
-    
+        var fetchXML: string | null = this._context.parameters.FetchXml.raw;
+        var recordIdPlaceholder: string | null = this._context.parameters.RecordIdPlaceholder.raw; // ?? "";  
+
         // This is just the simple control where the subgrid will be placed on the form
-        var controlAnchorField : string | null = this._context.parameters.ControlAnchorField.raw;
+        var controlAnchorField: string | null = this._context.parameters.ControlAnchorField.raw;
         // const recordIdLookupValue: ComponentFramework.EntityReference = this._context.parameters.RecordId.raw[0];
 
         // Other values if we need them
@@ -79,13 +78,13 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
         let entityTypeName = (<any>this._context.mode).contextInfo.entityTypeName;
         let entityDisplayName = (<any>this._context.mode).contextInfo.entityRecordName;
         // This breaks when you use the PCF Test Harness.  Neat!
-        try{
+        try {
             this._baseEnvironmentUrl = (<any>this._context)?.page?.getClientUrl();
         }
-        catch(ex){
+        catch (ex) {
             this._baseEnvironmentUrl = "https://localhost";
         }
-        var recordId : string = entityId; //this._context.parameters.RecordId.raw ?? currentRecordId;
+        var recordId: string = entityId; //this._context.parameters.RecordId.raw ?? currentRecordId;
 
         // See if we can use an Id from a lookup field specified on the current form
         // Wish we could use the Lookup property type, but doesn't appear to be supported yet
@@ -94,7 +93,7 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
         // TODO: you may need to webapi fetch the id 
         // https://github.com/shivuparagi/GenericLookupPCFControl/blob/main/GenericLookupPCFComponent/components/CalloutControlComponent.tsx
         // Look at LoadData function
-        var overriddenRecordIdFieldName : string | null = this._context.parameters.OverriddenRecordIdFieldName.raw; // ?? "";
+        var overriddenRecordIdFieldName: string | null = this._context.parameters.OverriddenRecordIdFieldName.raw; // ?? "";
         if (overriddenRecordIdFieldName) {
             try {
                 // Hack to get the field value from parent Model Driven App
@@ -104,12 +103,12 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
                 let tmpLookupField: any = Xrm.Page.getAttribute(overriddenRecordIdFieldName);
                 if (tmpLookupField && tmpLookupField.getValue() && tmpLookupField.getValue()[0] && tmpLookupField.getValue()[0].id) {
                     recordId = tmpLookupField.getValue()[0].id;
-                    if (this._isDebugMode){
+                    if (this._isDebugMode) {
                         console.log(`overriddenRecordIdFieldName '${overriddenRecordIdFieldName}' value used: ${recordId}.`)
                     }
                 }
                 else {
-                    if (this._isDebugMode){
+                    if (this._isDebugMode) {
                         console.log(`Could not find id from overriddenRecordIdFieldName '${overriddenRecordIdFieldName}'.`)
                     }
                 }
@@ -118,8 +117,8 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
                 //    recordId = control.id;
                 //}
             }
-            catch(ex){
-                if (this._isDebugMode){
+            catch (ex) {
+                if (this._isDebugMode) {
                     console.log(`Error trying to find id from overriddenRecordIdFieldName '${overriddenRecordIdFieldName}'. ${ex}`)
                 }
             }
@@ -129,7 +128,7 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
         // Grab primary entity Name from FetchXml
         // Test harness always initially passes in "val", so we can skip the following
         if (fetchXML != null && fetchXML != "val") {
-            fetchXML =  fetchXML.replace(/"/g, "'");
+            fetchXML = fetchXML.replace(/"/g, "'");
             this._primaryEntityName = this.getPrimaryEntityNameFromFetchXml(fetchXML);
             // Replace the placeholder     
             this._fetchXML = this.replacePlaceholderWithId(fetchXML, recordId, recordIdPlaceholder ?? "");
@@ -148,7 +147,7 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
         // this._container.style.overflow = "auto";
     }
 
-    private replacePlaceholderWithId(fetchXML: string, recordId: string, recordIdPlaceholder: string) : string {
+    private replacePlaceholderWithId(fetchXML: string, recordId: string, recordIdPlaceholder: string): string {
         if (recordId && recordIdPlaceholder) {
             if (fetchXML.indexOf(recordIdPlaceholder) > -1) {
                 //return fetchXML.replace(recordIdPlaceholder, recordId); // only replaces first occurrence of string       
@@ -159,18 +158,18 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
     }
 
     // Replace ALL occurrences of a string
-    private replaceAll(source: string, find: string, replace: string) : string{
+    private replaceAll(source: string, find: string, replace: string): string {
         // eslint-disable-next-line no-useless-escape
         return source.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
     }
-    
+
     private getPrimaryEntityNameFromFetchXml(fetchXml: string): string {
         let primaryEntityName: string = "";
         // @ts-ignore
         let filter = fetchXml.matchAll(/<entity name='(.*?)'>/g).next();
         if (filter && filter.value && filter.value[1]) {
             primaryEntityName = filter.value[1];
-        }        
+        }
         return primaryEntityName;
     }
     /**
@@ -180,13 +179,16 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
      */
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
         // debugger;  // eslint-disable-line no-debugger
-       // let props = {  columns: this._columnLayout, primaryEntityName: this._primaryEntityName, fetchXml: this._fetchXML, isDebugMode: this._isDebugMode, context: context, baseD365Url: this._baseEnvironmentUrl };
-       // return React.createElement(DetailsListDocumentsExample, props, {});
-        return React.createElement(CloudScapeTable);
+        let props = { columns: this._columnLayout, primaryEntityName: this._primaryEntityName, fetchXml: this._fetchXML, isDebugMode: this._isDebugMode, context: context, baseD365Url: this._baseEnvironmentUrl };
+        let props1: CloudscapeTableProps = {
+            allColumns: DynamicColumns,
+            allItems: RowData
+        }
+        return React.createElement(CloudscapeTable, props1);
 
         // TODO: Is it possible to support a grid without a columnlayout?
         // i.e. Create a default columnListLayout from the data
-     
+
     }
 
     /**
@@ -194,7 +196,7 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
      * @returns an object based on nomenclature defined in manifest, expecting object[s] for property marked as “bound” or “output”
      */
     public getOutputs(): IOutputs {
-        return { };
+        return {};
     }
 
     /**
