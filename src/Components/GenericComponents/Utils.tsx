@@ -1,24 +1,13 @@
 import * as React from "react";
-import {
-  Box,
-  Button,
-  Checkbox,
-  CollectionPreferences,
-  PropertyFilterProps,
-  SpaceBetween,
-} from "@cloudscape-design/components";
+import { Box, Button, Checkbox, CollectionPreferences, PropertyFilterProps, SpaceBetween } from "@cloudscape-design/components";
 
-export const TableNoMatchState = ({
-  onClearFilter,
-}: {
-  onClearFilter: () => void;
-}) => (
+export const TableNoMatchState = ({ onClearFilter }: { onClearFilter: () => void }) => (
   <Box margin={{ vertical: "xs" }} textAlign="center" color="inherit">
     <SpaceBetween size="xxs">
       <div>
         <b>No matches</b>
         <Box variant="p" color="inherit">
-          {'We cant find a match.'}
+          {"We cant find a match."}
         </Box>
       </div>
       <Button onClick={onClearFilter}>Clear filter</Button>
@@ -45,9 +34,7 @@ export const BLANK_SEARCH_AND = {
   operation: "and",
 } as PropertyFilterProps.Query;
 
-export const propertyFilterI18nStrings: (
-  resource?: any
-) => PropertyFilterProps.I18nStrings = (resource) => ({
+export const propertyFilterI18nStrings: (resource?: any) => PropertyFilterProps.I18nStrings = (resource) => ({
   filteringAriaLabel: "your choice",
   dismissAriaLabel: "Dismiss",
   clearAriaLabel: "Clear",
@@ -80,8 +67,7 @@ export const propertyFilterI18nStrings: (
   tokenLimitShowMore: "Show more",
   tokenLimitShowFewer: "Show fewer",
   clearFiltersText: "Clear filters",
-  removeTokenButtonAriaLabel: (token: any) =>
-    `Remove token ${token.propertyKey} ${token.operator} ${token.value}`,
+  removeTokenButtonAriaLabel: (token: any) => `Remove token ${token.propertyKey} ${token.operator} ${token.value}`,
   enteredTextLabel: (text: any) => `Use: "${text}"`,
 });
 
@@ -98,13 +84,7 @@ export const PAGE_SIZE_OPTIONS = [
   { value: 200, label: "200 items" },
 ];
 
-export const Preferences = ({
-  preferences,
-  setPreferences,
-  disabled,
-  pageSizeOptions = PAGE_SIZE_OPTIONS,
-  visibleContentOptions,
-}: any) => (
+export const Preferences = ({ preferences, setPreferences, disabled, pageSizeOptions = PAGE_SIZE_OPTIONS, visibleContentOptions }: any) => (
   <CollectionPreferences
     title="Preferences"
     confirmLabel="Confirm"
@@ -141,11 +121,8 @@ export const Preferences = ({
   />
 );
 
-export const paginationAriaLabels: (totalPages?: number) => any = (
-  totalPages
-) => ({
+export const paginationAriaLabels: (totalPages?: number) => any = (totalPages) => ({
   nextPageLabel: "Next page",
   previousPageLabel: "Previous page",
-  pageLabel: (pageNumber: any) =>
-    `Page ${pageNumber} of ${totalPages || "all pages"}`,
+  pageLabel: (pageNumber: any) => `Page ${pageNumber} of ${totalPages || "all pages"}`,
 });
