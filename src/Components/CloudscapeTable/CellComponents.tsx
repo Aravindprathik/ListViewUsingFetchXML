@@ -1,34 +1,31 @@
-import React = require("react");
+import * as React from "react";
 import { DataEntity } from "./CloudscapeInterface";
+import * as moment from "moment-timezone";
 
-export const getDataToDisplay: React.FC = (item: any, dataEntity: DataEntity) => {
+export const getDataToDisplay = (item: any, dataEntity: DataEntity) => {
   const dataType = dataEntity.metadata.type;
+  const data = item[dataEntity.fieldName] ? item[dataEntity.fieldName] : "";
 
   switch (dataType) {
     case "date":
-      return new Date(item[dataEntity.fieldName]).toLocaleDateString();
+      if (data) {
+        const desiredFormat = dataEntity?.metadata?.dateFormat ? dataEntity?.metadata?.dateFormat : "YYYY-MM-DD";
+        return moment(data).format(desiredFormat);
+      }
+      return ""; // Use your desired format
     case "dateTime":
-      return new Date(item[dataEntity.fieldName]).toLocaleString();
+      if (data) {
+        const desiredFormat = dataEntity?.metadata?.dateFormat ? dataEntity?.metadata?.dateFormat : "YYYY-MM-DD HH:mm:ss";
+        return moment(data).format(desiredFormat);
+      }
+      return "";
     case "boolean":
-      return item[dataEntity.fieldName] ? "Yes" : "No";
+      return data ? "Yes" : "No";
     default:
-      return item[dataEntity.fieldName];
+      return (
+        <>
+          <span>{`${data}`}</span>
+        </>
+      );
   }
-};
-interface StringCellProps {
-  data: string;
-}
-
-export const StringCell: React.FC<StringCellProps> = ({ data }: any) => {
-  // Custom rendering logic for string data
-  return <div>{data}</div>;
-};
-
-interface NumberCellProps {
-  data: number;
-}
-
-export const NumberCell: React.FC<NumberCellProps> = ({ data }: any) => {
-  // Custom rendering logic for number data
-  return <div>{data}</div>;
 };

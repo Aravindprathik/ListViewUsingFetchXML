@@ -5,6 +5,7 @@ export interface DynamicColumnDetails {
 }
 
 export interface ColumnInfo {
+  tableName: string;
   sortingColumn: string;
   isAscending: boolean;
 }

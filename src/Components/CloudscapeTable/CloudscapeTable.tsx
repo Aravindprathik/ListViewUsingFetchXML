@@ -1,6 +1,7 @@
 import {
   Box,
   CollectionPreferencesProps,
+  Header,
   Pagination,
   PropertyFilter,
   PropertyFilterProps,
@@ -9,7 +10,7 @@ import {
 } from "@cloudscape-design/components";
 import {
   BLANK_SEARCH_AND,
-  DEFAULT_PAGE_SIZE_IS_100,
+  DEFAULT_PAGE_SIZE_IS_20,
   extractFieldNamesForDefaultVisibleContent,
   generateColumnDefinitions,
   generateFilteringProperties,
@@ -66,7 +67,7 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({
   useEffect(() => {
     if (allColumns) {
       const defaultPreferences = {
-        pageSize: DEFAULT_PAGE_SIZE_IS_100,
+        pageSize: DEFAULT_PAGE_SIZE_IS_20,
         visibleContent: extractFieldNamesForDefaultVisibleContent(allColumns),
         wrapLines: true,
         stripedRows: false,
@@ -105,50 +106,51 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({
   const dynamicsHandler = async () => {
     setDataLoading(true);
 
-    if (kpiEntityId) {
-      pcfContext.webAPI
-        .retrieveMultipleRecords(
+    try {
+      if (kpiEntityId) {
+        const kpiResult = await pcfContext.webAPI.retrieveMultipleRecords(
           kpiEntityName,
-          "?fetchXml=" + encodeURIComponent(KPI_FETCH_XML)
-        )
-        .then((results: any) => {
-          if (results && results.entities && results.entities.length > 0) {
-            console.log("AS IS results ", JSON.stringify(results));
+          `?fetchXml=${encodeURIComponent(KPI_FETCH_XML)}`
+        );
+        console.log("kpiResult ", JSON.stringify(kpiResult));
 
-            const kpiResult = results?.entities?.value[0];
-            console.log("kpiResult ", JSON.stringify(kpiResult));
-            const cb_fetchxml = kpiResult.cb_fetchxml;
-            const cb_columnlayout = kpiResult.cb_columnlayout;
-            console.log("cb_columnlayout ", JSON.stringify(cb_columnlayout));
+        if (kpiResult.entities && kpiResult.entities.length > 0) {
+          const firstKpiEntity = kpiResult.entities[0].value; // TODO - check once to make sure it is values
+          console.log("firstKpiEntity ", JSON.stringify(firstKpiEntity));
 
-            setAllColumns(cb_columnlayout);
+          const cb_fetchxml = firstKpiEntity.cb_fetchxml;
+          const cb_columnlayout = firstKpiEntity.cb_columnlayout;
+          setAllColumns(cb_columnlayout);
 
-            const primaryEntityName = getPrimaryEntityNameFromFetchXml(cb_fetchxml);
+          const primaryEntityName = getPrimaryEntityNameFromFetchXml(cb_fetchxml);
+          console.log("primaryEntityName ", primaryEntityName);
 
-            pcfContext.webAPI
-            .retrieveMultipleRecords(
-              primaryEntityName,
-              "?fetchXml=" + encodeURIComponent(cb_fetchxml)
-            ).then((secondResult: any) => {
+          const secondResult = await pcfContext.webAPI.retrieveMultipleRecords(
+            primaryEntityName,
+            `?fetchXml=${encodeURIComponent(cb_fetchxml)}`
+          );
 
-              secondResult
+          console.log("Second API call result", secondResult);
 
-            }).catch((secondError: any) => {
-              console.error("Second API call error ", secondError);
-              setDataLoadingStatus("error");
-            })
+          if (secondResult && secondResult.entities && secondResult.entities.length > 0) {
+            const _allItems = secondResult.entities;
+            console.log("_allItems ", _allItems);
 
+            setAllItems(_allItems);
           }
-        })
-        .catch((error: any) => {
-          console.error("Unable to fetch KPI Master ", error);
-          setDataLoadingStatus("error");
-        });
+        } else {
+          throw new Error("No KPI entities found.");
+        }
+      } else {
+        throw new Error("Invalid KPI Entity ID.");
+      }
 
       setDataLoadingStatus("success");
-    } else {
-      setDataLoading(false);
+    } catch (error) {
+      console.error("An error occurred:", error);
       setDataLoadingStatus("error");
+    } finally {
+      setDataLoading(false);
     }
   };
 
@@ -219,6 +221,7 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({
           wrapLines={tableDefaultPreferences.wrapLines}
           stripedRows={tableDefaultPreferences.stripedRows}
           contentDensity={tableDefaultPreferences.contentDensity}
+          header={<Header counter={`(${tableRowData?.length})`}>{allColumns?.columnInfo.tableName || ''}</Header>}
           filter={
             <PropertyFilter
               i18nStrings={propertyFilterI18nStrings("Table")}

@@ -3,7 +3,7 @@ import { ColumnDataType, DataEntity, DynamicColumnDetails } from "./CloudscapeIn
 import { CollectionPreferencesProps, TableProps } from "@cloudscape-design/components";
 import { getDataToDisplay } from "./CellComponents";
 
-export const DEFAULT_PAGE_SIZE_IS_100 = 100;
+export const DEFAULT_PAGE_SIZE_IS_20 = 20;
 export const BLANK_SEARCH_AND = {
   tokens: [],
   operation: "and",
@@ -62,8 +62,9 @@ export function generateColumnDefinitions(dynamicColumnDetails: DynamicColumnDet
     return {
       id: dataEntity.fieldName,
       header: dataEntity.displayName,
-      width: dataEntity.minWidth,
+      width: dataEntity.minWidth | 150,
       cell: (item: any) => getDataToDisplay(item, dataEntity),
+      sortingField: dataEntity.fieldName
     } as TableProps.ColumnDefinition<DataEntity>;
   });
 
