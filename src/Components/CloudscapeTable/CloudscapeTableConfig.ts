@@ -13,18 +13,22 @@ export function extractFieldNamesForDefaultVisibleContent(dynamicColumnDetails: 
   return dynamicColumnDetails.data.map((dataEntity: DataEntity) => dataEntity.fieldName);
 }
 
-export function generateVisibleContentOptions(dynamicColumnDetails: DynamicColumnDetails): CollectionPreferencesProps.VisibleContentOptionsGroup[] {
-  const groups: CollectionPreferencesProps.VisibleContentOptionsGroup[] = [
-    {
-      label: 'Properties', // You can customize the label as needed
-      options: dynamicColumnDetails.data.map((dataEntity: DataEntity) => ({
-        id: dataEntity.fieldName,
-        label: dataEntity.displayName,
-        editable: false,
-      })),
-    },
-  ];
-  return groups;
+export function generateVisibleContentOptions(dynamicColumnDetails: DynamicColumnDetails | undefined): CollectionPreferencesProps.VisibleContentOptionsGroup[] {
+  if(dynamicColumnDetails) {
+    const groups: CollectionPreferencesProps.VisibleContentOptionsGroup[] = [
+      {
+        label: 'Properties', // You can customize the label as needed
+        options: dynamicColumnDetails?.data.map((dataEntity: DataEntity) => ({
+          id: dataEntity.fieldName,
+          label: dataEntity.displayName,
+          editable: false,
+        })),
+      },
+    ];
+    return groups;
+  }
+
+  return [];
 }
 
 export function generateFilteringProperties(dynamicColumnDetails: DynamicColumnDetails): FilteringProperty[] {
