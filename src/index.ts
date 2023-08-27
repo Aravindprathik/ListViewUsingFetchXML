@@ -186,14 +186,13 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
      */
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
         // debugger;  // eslint-disable-line no-debugger
-        let props = { columns: this._columnLayout, primaryEntityName: this._primaryEntityName, fetchXml: this._fetchXML, isDebugMode: this._isDebugMode, context: context, baseD365Url: this._baseEnvironmentUrl };
-        let props1 = {
-            allColumns: DynamicColumns,
-            allItems: RowData,
+        // let props = { columns: this._columnLayout, primaryEntityName: this._primaryEntityName, fetchXml: this._fetchXML, isDebugMode: this._isDebugMode, context: context, baseD365Url: this._baseEnvironmentUrl };
+        let props = {
             kpiEntityId :this._kpiEntityId,
-            kpiEntityName : this._kpiEntityName
+            kpiEntityName : this._kpiEntityName,
+            pcfContext: this._context
         }
-        return React.createElement(CloudscapeTable, props1);
+        return React.createElement(CloudscapeTable, props);
 
         // TODO: Is it possible to support a grid without a columnlayout?
         // i.e. Create a default columnListLayout from the data

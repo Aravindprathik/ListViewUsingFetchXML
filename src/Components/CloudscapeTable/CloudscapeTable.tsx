@@ -1,4 +1,5 @@
 import {
+  Box,
   CollectionPreferencesProps,
   Pagination,
   PropertyFilter,
@@ -26,15 +27,23 @@ import {
 import { useCollection } from "@cloudscape-design/collection-hooks";
 import * as React from "react";
 import { useEffect } from "react";
+import { IInputs } from "../../generated/ManifestTypes";
 
 interface CloudscapeTableProps {
   kpiEntityId: string;
   kpiEntityName: string;
+  pcfContext: ComponentFramework.Context<IInputs>;
 }
 const CloudscapeTable: React.FC<CloudscapeTableProps> = ({
   kpiEntityId,
   kpiEntityName,
+  pcfContext,
 }) => {
+  const [dataLoading, setDataLoading] = React.useState(false);
+  const [dataLoadingStatus, setDataLoadingStatus] = React.useState<
+    "loading" | "error" | "success"
+  >("loading");
+
   const [allColumns, setAllColumns] = React.useState<
     DynamicColumnDetails | undefined
   >();
@@ -89,6 +98,70 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({
     setTableRowData(allItems || []);
   }, [allItems]);
 
+  useEffect(() => {
+    dynamicsHandler();
+  }, [pcfContext]);
+
+  const dynamicsHandler = async () => {
+    setDataLoading(true);
+
+    if (kpiEntityId) {
+      pcfContext.webAPI
+        .retrieveMultipleRecords(
+          kpiEntityName,
+          "?fetchXml=" + encodeURIComponent(KPI_FETCH_XML)
+        )
+        .then((results: any) => {
+          if (results && results.entities && results.entities.length > 0) {
+            console.log("AS IS results ", JSON.stringify(results));
+
+            const kpiResult = results?.entities?.value[0];
+            console.log("kpiResult ", JSON.stringify(kpiResult));
+            const cb_fetchxml = kpiResult.cb_fetchxml;
+            const cb_columnlayout = kpiResult.cb_columnlayout;
+            console.log("cb_columnlayout ", JSON.stringify(cb_columnlayout));
+
+            setAllColumns(cb_columnlayout);
+
+            const primaryEntityName = getPrimaryEntityNameFromFetchXml(cb_fetchxml);
+
+            pcfContext.webAPI
+            .retrieveMultipleRecords(
+              primaryEntityName,
+              "?fetchXml=" + encodeURIComponent(cb_fetchxml)
+            ).then((secondResult: any) => {
+
+              secondResult
+
+            }).catch((secondError: any) => {
+              console.error("Second API call error ", secondError);
+              setDataLoadingStatus("error");
+            })
+
+          }
+        })
+        .catch((error: any) => {
+          console.error("Unable to fetch KPI Master ", error);
+          setDataLoadingStatus("error");
+        });
+
+      setDataLoadingStatus("success");
+    } else {
+      setDataLoading(false);
+      setDataLoadingStatus("error");
+    }
+  };
+
+  const getPrimaryEntityNameFromFetchXml = (fetchXml: string): string => {
+    let primaryEntityName: string = "";
+    // @ts-ignore
+    let filter = fetchXml.matchAll(/<entity name='(.*?)'>/g).next();
+    if (filter && filter.value && filter.value[1]) {
+      primaryEntityName = filter.value[1];
+    }
+    return primaryEntityName;
+  };
+
   const {
     items,
     actions,
@@ -114,7 +187,7 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({
     sorting: {
       defaultState: {
         sortingColumn: {
-          sortingField: allColumns?.columnInfo?.sortingColumn || '',
+          sortingField: allColumns?.columnInfo?.sortingColumn || "",
         },
         isDescending: !allColumns?.columnInfo?.isAscending,
       },
@@ -128,49 +201,56 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({
 
   return (
     <>
-      <Table
-        variant="embedded"
-        stickyHeader={true}
-        loading={false}
-        loadingText={"Loading Results..."}
-        items={items}
-        columnDefinitions={tableColumnDefinitions}
-        visibleColumns={tableDefaultPreferences.visibleContent}
-        resizableColumns={tableDefaultPreferences.custom}
-        wrapLines={tableDefaultPreferences.wrapLines}
-        stripedRows={tableDefaultPreferences.stripedRows}
-        contentDensity={tableDefaultPreferences.contentDensity}
-        filter={
-          <PropertyFilter
-            i18nStrings={propertyFilterI18nStrings("Table")}
-            countText={getMatchesCountText(filteredItemsCount!)}
-            expandToViewport={true}
-            {...propertyFilterProps}
-            query={query}
-            onChange={(event: any) => {
-              setQuery(
-                event.detail.tokens?.length === 0
-                  ? BLANK_SEARCH_AND
-                  : event.detail
-              );
-            }}
-          />
-        }
-        {...collectionProps}
-        pagination={
-          <Pagination
-            {...paginationProps}
-            ariaLabels={paginationAriaLabels(paginationProps.pagesCount)}
-          />
-        }
-        preferences={
-          <Preferences
-            preferences={tableDefaultPreferences}
-            setPreferences={setTableDefaultPreferences}
-            visibleContentOptions={generateVisibleContentOptions(allColumns)}
-          />
-        }
-      />
+      {dataLoadingStatus === "error" && (
+        <Box textAlign="center">
+          <span>{"Error fetching records"}</span>
+        </Box>
+      )}
+      {dataLoadingStatus !== "error" && (
+        <Table
+          variant="embedded"
+          stickyHeader={true}
+          loading={dataLoading}
+          loadingText={"Loading Data..."}
+          items={items}
+          columnDefinitions={tableColumnDefinitions}
+          visibleColumns={tableDefaultPreferences.visibleContent}
+          resizableColumns={tableDefaultPreferences.custom}
+          wrapLines={tableDefaultPreferences.wrapLines}
+          stripedRows={tableDefaultPreferences.stripedRows}
+          contentDensity={tableDefaultPreferences.contentDensity}
+          filter={
+            <PropertyFilter
+              i18nStrings={propertyFilterI18nStrings("Table")}
+              countText={getMatchesCountText(filteredItemsCount!)}
+              expandToViewport={true}
+              {...propertyFilterProps}
+              query={query}
+              onChange={(event: any) => {
+                setQuery(
+                  event.detail.tokens?.length === 0
+                    ? BLANK_SEARCH_AND
+                    : event.detail
+                );
+              }}
+            />
+          }
+          {...collectionProps}
+          pagination={
+            <Pagination
+              {...paginationProps}
+              ariaLabels={paginationAriaLabels(paginationProps.pagesCount)}
+            />
+          }
+          preferences={
+            <Preferences
+              preferences={tableDefaultPreferences}
+              setPreferences={setTableDefaultPreferences}
+              visibleContentOptions={generateVisibleContentOptions(allColumns)}
+            />
+          }
+        />
+      )}
     </>
   );
 };
