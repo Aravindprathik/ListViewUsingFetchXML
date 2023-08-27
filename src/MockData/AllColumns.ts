@@ -2,6 +2,7 @@ import { DynamicColumnDetails } from "../Components/CloudscapeTable/CloudscapeIn
 
 export const DynamicColumns1: DynamicColumnDetails = {
   "columnInfo": {
+    "tableName": "Table Name",
     "sortingColumn": "column1",
     "isAscending": true
   },
@@ -29,6 +30,7 @@ export const DynamicColumns1: DynamicColumnDetails = {
 
 export const DynamicColumns: DynamicColumnDetails = {
   "columnInfo": {
+    "tableName": "Table Name",
     "sortingColumn": "fullname",
     "isAscending": true
   },
@@ -48,7 +50,8 @@ export const DynamicColumns: DynamicColumnDetails = {
       "minWidth": 80,
       "maxWidth": 100,
       "metadata": {
-        "type": "string"
+        "type": "externalLink",
+        "link": "https://mail.google.com/mail/u/0/#inbox"
       }
     },
     {

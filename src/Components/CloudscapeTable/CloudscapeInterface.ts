@@ -18,9 +18,10 @@ export interface DataEntity {
   metadata: Metadata;
 }
 
-export type ColumnDataType = 'link' | 'string' | 'date' | 'dateTime' | 'number' | 'boolean';
+export type ColumnDataType = 'externalLink' | 'link' | 'string' | 'date' | 'dateTime' | 'number' | 'boolean';
 
 export interface Metadata {
   type: ColumnDataType;
   dateFormat?: string;
+  link?: string;
 }

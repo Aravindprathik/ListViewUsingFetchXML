@@ -45,6 +45,7 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({
     "loading" | "error" | "success"
   >("loading");
 
+  const [primaryEntity, setPrimaryEntityName] = React.useState('');
   const [allColumns, setAllColumns] = React.useState<
     DynamicColumnDetails | undefined
   >();
@@ -80,7 +81,7 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({
   // generating Table column definitions from allColumns
   useEffect(() => {
     if (allColumns) {
-      const columnDefinitions = generateColumnDefinitions(allColumns);
+      const columnDefinitions = generateColumnDefinitions(allColumns, pcfContext, primaryEntity);
       console.log("columnDefinitions ", columnDefinitions);
       setTableColumnDefinitions(columnDefinitions);
     }
@@ -122,11 +123,12 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({
           const cb_columnlayout = firstKpiEntity.cb_columnlayout;
           setAllColumns(cb_columnlayout);
 
-          const primaryEntityName = getPrimaryEntityNameFromFetchXml(cb_fetchxml);
-          console.log("primaryEntityName ", primaryEntityName);
+          const _primaryEntityName = getPrimaryEntityNameFromFetchXml(cb_fetchxml);
+          setPrimaryEntityName(_primaryEntityName);
+          console.log("primaryEntityName ", _primaryEntityName);
 
           const secondResult = await pcfContext.webAPI.retrieveMultipleRecords(
-            primaryEntityName,
+            _primaryEntityName,
             `?fetchXml=${encodeURIComponent(cb_fetchxml)}`
           );
 

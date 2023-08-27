@@ -1,4 +1,3 @@
-
 const KPI_FETCH_XML = `<fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
 <entity name="cb_kpimasterdata">
   <attribute name="cb_kpimasterdataid" />

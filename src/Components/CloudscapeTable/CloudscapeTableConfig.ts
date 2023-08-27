@@ -1,7 +1,18 @@
-import { FilteringProperty, PropertyFilterProps } from "@cloudscape-design/components/property-filter/interfaces";
-import { ColumnDataType, DataEntity, DynamicColumnDetails } from "./CloudscapeInterface";
-import { CollectionPreferencesProps, TableProps } from "@cloudscape-design/components";
+import {
+  FilteringProperty,
+  PropertyFilterProps,
+} from "@cloudscape-design/components/property-filter/interfaces";
+import {
+  ColumnDataType,
+  DataEntity,
+  DynamicColumnDetails,
+} from "./CloudscapeInterface";
+import {
+  CollectionPreferencesProps,
+  TableProps,
+} from "@cloudscape-design/components";
 import { getDataToDisplay } from "./CellComponents";
+import { IInputs } from "../../generated/ManifestTypes";
 
 export const DEFAULT_PAGE_SIZE_IS_20 = 20;
 export const BLANK_SEARCH_AND = {
@@ -9,15 +20,21 @@ export const BLANK_SEARCH_AND = {
   operation: "and",
 } as PropertyFilterProps.Query;
 
-export function extractFieldNamesForDefaultVisibleContent(dynamicColumnDetails: DynamicColumnDetails): string[] {
-  return dynamicColumnDetails.data.map((dataEntity: DataEntity) => dataEntity.fieldName);
+export function extractFieldNamesForDefaultVisibleContent(
+  dynamicColumnDetails: DynamicColumnDetails
+): string[] {
+  return dynamicColumnDetails.data.map(
+    (dataEntity: DataEntity) => dataEntity.fieldName
+  );
 }
 
-export function generateVisibleContentOptions(dynamicColumnDetails: DynamicColumnDetails | undefined): CollectionPreferencesProps.VisibleContentOptionsGroup[] {
-  if(dynamicColumnDetails) {
+export function generateVisibleContentOptions(
+  dynamicColumnDetails: DynamicColumnDetails | undefined
+): CollectionPreferencesProps.VisibleContentOptionsGroup[] {
+  if (dynamicColumnDetails) {
     const groups: CollectionPreferencesProps.VisibleContentOptionsGroup[] = [
       {
-        label: 'Properties', // You can customize the label as needed
+        label: "Properties", // You can customize the label as needed
         options: dynamicColumnDetails?.data.map((dataEntity: DataEntity) => ({
           id: dataEntity.fieldName,
           label: dataEntity.displayName,
@@ -31,42 +48,50 @@ export function generateVisibleContentOptions(dynamicColumnDetails: DynamicColum
   return [];
 }
 
-export function generateFilteringProperties(dynamicColumnDetails: DynamicColumnDetails): FilteringProperty[] {
-  const filteringProperties: FilteringProperty[] = dynamicColumnDetails.data.map((dataEntity: DataEntity) => {
-    const dataType: ColumnDataType = dataEntity.metadata.type;
-    let operators: string[] = [];
+export function generateFilteringProperties(
+  dynamicColumnDetails: DynamicColumnDetails
+): FilteringProperty[] {
+  const filteringProperties: FilteringProperty[] =
+    dynamicColumnDetails.data.map((dataEntity: DataEntity) => {
+      const dataType: ColumnDataType = dataEntity.metadata.type;
+      let operators: string[] = [];
 
-    if (dataType === 'string') {
-      operators = [":", "!:", "=", "!="];
-    } else if (dataType === 'number') {
-      operators = ['=', '!=', '<', '<=', '>', '>='];
-    } else if (dataType === 'date' || dataType === 'dateTime') {
-      operators = ['=', '!=', '<', '<=', '>', '>='];
-    } else {
-      operators = [":", "!:", "=", "!="];
-    }
+      if (dataType === "string") {
+        operators = [":", "!:", "=", "!="];
+      } else if (dataType === "number") {
+        operators = ["=", "!=", "<", "<=", ">", ">="];
+      } else if (dataType === "date" || dataType === "dateTime") {
+        operators = ["=", "!=", "<", "<=", ">", ">="];
+      } else {
+        operators = [":", "!:", "=", "!="];
+      }
 
-    return {
-      key: dataEntity.fieldName,
-      propertyLabel: dataEntity.displayName,
-      groupValuesLabel: `${dataEntity.displayName} values`,
-      operators,
-    } as FilteringProperty;
-  });
+      return {
+        key: dataEntity.fieldName,
+        propertyLabel: dataEntity.displayName,
+        groupValuesLabel: `${dataEntity.displayName} values`,
+        operators,
+      } as FilteringProperty;
+    });
 
   return filteringProperties;
 }
 
-export function generateColumnDefinitions(dynamicColumnDetails: DynamicColumnDetails): TableProps.ColumnDefinition<DataEntity>[] {
-  const columnDefinitions: TableProps.ColumnDefinition<DataEntity>[] = dynamicColumnDetails.data.map((dataEntity: DataEntity) => {
-    return {
-      id: dataEntity.fieldName,
-      header: dataEntity.displayName,
-      width: dataEntity.minWidth | 150,
-      cell: (item: any) => getDataToDisplay(item, dataEntity),
-      sortingField: dataEntity.fieldName
-    } as TableProps.ColumnDefinition<DataEntity>;
-  });
+export function generateColumnDefinitions(
+  dynamicColumnDetails: DynamicColumnDetails,
+  pcfContext: ComponentFramework.Context<IInputs>,
+  primaryEntityName: string
+): TableProps.ColumnDefinition<DataEntity>[] {
+  const columnDefinitions: TableProps.ColumnDefinition<DataEntity>[] =
+    dynamicColumnDetails.data.map((dataEntity: DataEntity) => {
+      return {
+        id: dataEntity.fieldName,
+        header: dataEntity.displayName,
+        width: dataEntity.minWidth | 150,
+        cell: (item: any) => getDataToDisplay(item, dataEntity, pcfContext, primaryEntityName),
+        sortingField: dataEntity.fieldName,
+      } as TableProps.ColumnDefinition<DataEntity>;
+    });
 
   return columnDefinitions;
 }
