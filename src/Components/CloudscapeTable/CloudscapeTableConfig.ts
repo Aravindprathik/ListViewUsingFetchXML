@@ -38,7 +38,7 @@ export function generateVisibleContentOptions(
         options: dynamicColumnDetails?.data.map((dataEntity: DataEntity) => ({
           id: dataEntity.fieldName,
           label: dataEntity.displayName,
-          editable: false,
+          editable: dataEntity.isColumnVisible || false,
         })),
       },
     ];

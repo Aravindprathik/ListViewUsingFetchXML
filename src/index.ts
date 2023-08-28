@@ -53,29 +53,29 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
         this._isDebugMode = false;
         this._itemsPerPage = 5000;
 
-        if (this._context.parameters.DebugMode) {
+       /* if (this._context.parameters.DebugMode) {
             this._isDebugMode = this._context.parameters.DebugMode.raw == "1";
-        }
+        }*/
 
         // If you want this to break every time you set isDebugMode to true
         //if (this._isDebugMode) { 
         //    debugger;  // eslint-disable-line no-debugger        
         //}
 
-        if (this._context.parameters.ItemsPerPage) {
+       /*  if (this._context.parameters.ItemsPerPage) {
             this._itemsPerPage = this._context.parameters.ItemsPerPage.raw;
-        }
+        }*/
 
         // TODO: Validate the input parameters to make sure we get a friendly error instead of weird errors
-        var fetchXML: string | null = this._context.parameters.FetchXml.raw;
-        var recordIdPlaceholder: string | null = this._context.parameters.RecordIdPlaceholder.raw; // ?? "";  
+       /*  var fetchXML: string | null = this._context.parameters.FetchXml.raw;
+        var recordIdPlaceholder: string | null = this._context.parameters.RecordIdPlaceholder.raw; // ?? "";  */
 
         // This is just the simple control where the subgrid will be placed on the form
         var controlAnchorField: string | null = this._context.parameters.ControlAnchorField.raw;
         // const recordIdLookupValue: ComponentFramework.EntityReference = this._context.parameters.RecordId.raw[0];
 
         // Other values if we need them
-        this._kpiEntityId = this._context.parameters.KPILookup.raw[0].id;
+        this._kpiEntityId = this._context.parameters.KPILookup.raw.toString();
         this._kpiEntityName = this._context.parameters.KPILookup.raw[0].entityType;
         console.log("kpiEntityId : ",this._kpiEntityId, " kpiEntityName : ", this._kpiEntityName);
         let entityId = (<any>this._context.mode).contextInfo.entityId;
@@ -93,76 +93,8 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
         var recordId: string = entityId; //this._context.parameters.RecordId.raw ?? currentRecordId;
 
 
-        // See if we can use an Id from a lookup field specified on the current form
-        // Wish we could use the Lookup property type, but doesn't appear to be supported yet
-        // https://butenko.pro/2021/03/21/pcf-lookup-attribute-lets-take-look-under-the-hood/
-        // So using a hack to get the value from the Xrm.Page.  This is not recommended.
-        // TODO: you may need to webapi fetch the id 
-        // https://github.com/shivuparagi/GenericLookupPCFControl/blob/main/GenericLookupPCFComponent/components/CalloutControlComponent.tsx
-        // Look at LoadData function
-        var overriddenRecordIdFieldName: string | null = this._context.parameters.OverriddenRecordIdFieldName.raw; // ?? "";
-        if (overriddenRecordIdFieldName) {
-            try {
-                // Hack to get the field value from parent Model Driven App
-                // eslint-disable-next-line no-undef
-                // @ts-ignore
-                // eslint-disable-next-line no-undef
-                let tmpLookupField: any = Xrm.Page.getAttribute(overriddenRecordIdFieldName);
-                if (tmpLookupField && tmpLookupField.getValue() && tmpLookupField.getValue()[0] && tmpLookupField.getValue()[0].id) {
-                    recordId = tmpLookupField.getValue()[0].id;
-                    if (this._isDebugMode) {
-                        console.log(`overriddenRecordIdFieldName '${overriddenRecordIdFieldName}' value used: ${recordId}.`)
-                    }
-                }
-                else {
-                    if (this._isDebugMode) {
-                        console.log(`Could not find id from overriddenRecordIdFieldName '${overriddenRecordIdFieldName}'.`)
-                    }
-                }
-                //let control = (<any>this._context)?.page.getControl(overriddenRecordIdFieldName);
-                //if (control && control.id){
-                //    recordId = control.id;
-                //}
-            }
-            catch (ex) {
-                if (this._isDebugMode) {
-                    console.log(`Error trying to find id from overriddenRecordIdFieldName '${overriddenRecordIdFieldName}'. ${ex}`)
-                }
-            }
-        }
-
-        // Update FetchXml, replace Record Id Placeholder with an actual Id
-        // Grab primary entity Name from FetchXml
-        // Test harness always initially passes in "val", so we can skip the following
-        if (fetchXML != null && fetchXML != "val") {
-            fetchXML = fetchXML.replace(/"/g, "'");
-            this._primaryEntityName = this.getPrimaryEntityNameFromFetchXml(fetchXML);
-            // Replace the placeholder     
-            this._fetchXML = this.replacePlaceholderWithId(fetchXML, recordId, recordIdPlaceholder ?? "");
-        }
-
-        // Column Layout provides field ordering, names, and widths
-        let columnLayoutJson = this._context.parameters.ColumnLayoutJson.raw;
-        this._columnLayout = columnLayoutJson != null && columnLayoutJson != "val" ? JSON.parse(columnLayoutJson) : null;
-
-        //this._currentPageNumber = 1;
-
-        //var globalContext = Xrm.Utility.getGlobalContext();
-        //var appUrl = globalContext.getCurrentAppUrl();
-
-        // this blows up
-        // this._container.style.overflow = "auto";
     }
 
-    private replacePlaceholderWithId(fetchXML: string, recordId: string, recordIdPlaceholder: string): string {
-        if (recordId && recordIdPlaceholder) {
-            if (fetchXML.indexOf(recordIdPlaceholder) > -1) {
-                //return fetchXML.replace(recordIdPlaceholder, recordId); // only replaces first occurrence of string       
-                return this.replaceAll(fetchXML, recordIdPlaceholder, recordId);
-            }
-        }
-        return fetchXML;
-    }
 
     // Replace ALL occurrences of a string
     private replaceAll(source: string, find: string, replace: string): string {

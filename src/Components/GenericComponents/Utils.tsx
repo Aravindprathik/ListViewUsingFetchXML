@@ -10,7 +10,6 @@ export const TableNoMatchState = ({ onClearFilter }: { onClearFilter: () => void
           {"We cant find a match."}
         </Box>
       </div>
-      <Button onClick={onClearFilter}>Clear filter</Button>
     </SpaceBetween>
   </Box>
 );
@@ -39,7 +38,7 @@ export const propertyFilterI18nStrings: (resource?: any) => PropertyFilterProps.
   dismissAriaLabel: "Dismiss",
   clearAriaLabel: "Clear",
 
-  filteringPlaceholder: `Filter by keyword`,
+  filteringPlaceholder: "Filter by keyword",
   groupValuesText: "Values",
   groupPropertiesText: "Tag",
   operatorsText: "Operators",

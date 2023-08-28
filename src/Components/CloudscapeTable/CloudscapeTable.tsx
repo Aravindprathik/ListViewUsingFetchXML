@@ -29,6 +29,7 @@ import { useCollection } from "@cloudscape-design/collection-hooks";
 import * as React from "react";
 import { useEffect } from "react";
 import { IInputs } from "../../generated/ManifestTypes";
+import { json } from "stream/consumers";
 
 interface CloudscapeTableProps {
   kpiEntityId: string;
@@ -109,8 +110,75 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({
 
     try {
       if (kpiEntityId) {
-        const kpiResult = await pcfContext.webAPI.retrieveMultipleRecords(
-          kpiEntityName,
+        var fetchData = {
+          "cb_kpimasterdataid": "{2ED4C990-9C42-EE11-BDF4-0022482A939E}"
+        };
+        var fetchXml = [
+          "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>",
+          "  <entity name='cb_kpimasterdata'>",
+          "    <attribute name='cb_kpimasterdataid'/>",
+          "    <attribute name='cb_name'/>",
+          "    <attribute name='cb_fetchxml'/>",
+          "    <attribute name='cb_columnlayout'/>",
+          "    <order attribute='cb_name' descending='false'/>",
+          "    <filter type='and'>",
+          "      <condition attribute='cb_kpimasterdataid' operator='eq' value='", fetchData.cb_kpimasterdataid/*{2ED4C990-9C42-EE11-BDF4-0022482A939E}*/, "'/>",
+          "    </filter>",
+          "  </entity>",
+          "</fetch>"
+          ].join("");
+
+        pcfContext.webAPI.retrieveMultipleRecords("cb_kpimasterdata", "?fetchXml=" + encodeURIComponent(fetchXml)).then(
+          (results: any) => {
+            if (results && results.entities && results.entities.length > 0) {
+
+              var firstKpiEntity = results.entities;
+              console.log("firstKpiEntity ",  firstKpiEntity);
+
+              let cb_fetchxml = firstKpiEntity[0].cb_fetchxml;
+              console.log("cb_fetchxml ", cb_fetchxml);
+
+              let _columnlayout = firstKpiEntity[0].cb_columnlayout;
+              console.log("cb_columnlayout ", JSON.stringify(_columnlayout));
+
+              let _finalColumnLayout = _columnlayout != null ? JSON.parse(_columnlayout) : null;
+
+              let fetchXML_AllItems = cb_fetchxml.replace(/"/g, "'");
+              console.log("fetchXML_AllItems : ",fetchXML_AllItems);
+
+              const _primaryEntityName = getPrimaryEntityNameFromFetchXml(fetchXML_AllItems);
+              console.log("primaryEntityName ", _primaryEntityName);
+              
+              setPrimaryEntityName(_primaryEntityName);
+              setAllColumns(_finalColumnLayout);
+
+              pcfContext.webAPI.retrieveMultipleRecords(_primaryEntityName, "?fetchXml=" + encodeURIComponent(fetchXML_AllItems)).then(
+                (results: any) => {
+                  if (results && results.entities && results.entities.length > 0) {
+                    const _allItems = results.entities;
+                    console.log("_allItems ", _allItems);
+                    setAllItems(_allItems);
+                    setDataLoadingStatus("success");
+                  }
+              },
+              (e: any) => {
+                  console.error("An error occurred:", e);
+                  setDataLoadingStatus("error");
+              });
+            }
+            },
+      
+        (e: any) => {
+            console.error("An error occurred:", e);
+            setDataLoadingStatus("error");
+        });
+      
+      }
+
+
+
+     /*   const kpiResult = await pcfContext.webAPI.retrieveMultipleRecords(
+          "cb_kpimasterdata",
           `?fetchXml=${encodeURIComponent(KPI_FETCH_XML)}`
         );
         console.log("kpiResult ", JSON.stringify(kpiResult));
@@ -147,7 +215,7 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({
         throw new Error("Invalid KPI Entity ID.");
       }
 
-      setDataLoadingStatus("success");
+      setDataLoadingStatus("success"); */
     } catch (error) {
       console.error("An error occurred:", error);
       setDataLoadingStatus("error");
