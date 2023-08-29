@@ -1,4 +1,4 @@
-import { DynamicColumnDetails } from "../Components/CloudscapeTable/CloudscapeInterface";
+/*import { DynamicColumnDetails } from "../Components/CloudscapeTable/CloudscapeInterface";
 
 export const DynamicColumns1: DynamicColumnDetails = {
   "columnInfo": {
@@ -121,4 +121,4 @@ export const DynamicColumns: DynamicColumnDetails = {
       }
     }
   ]
-}
+}*/

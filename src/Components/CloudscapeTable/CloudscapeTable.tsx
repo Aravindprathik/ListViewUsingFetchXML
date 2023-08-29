@@ -111,8 +111,9 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({
     try {
       if (kpiEntityId) {
         var fetchData = {
-          "cb_kpimasterdataid": "{2ED4C990-9C42-EE11-BDF4-0022482A939E}"
+          "cb_kpimasterdataid" : kpiEntityId
         };
+        console.log("fetchData.cb_kpimasterdataid",fetchData.cb_kpimasterdataid)
         var fetchXml = [
           "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>",
           "  <entity name='cb_kpimasterdata'>",
@@ -122,7 +123,7 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({
           "    <attribute name='cb_columnlayout'/>",
           "    <order attribute='cb_name' descending='false'/>",
           "    <filter type='and'>",
-          "      <condition attribute='cb_kpimasterdataid' operator='eq' value='", fetchData.cb_kpimasterdataid/*{2ED4C990-9C42-EE11-BDF4-0022482A939E}*/, "'/>",
+          "      <condition attribute='cb_kpimasterdataid' operator='eq' value='", kpiEntityId/*{2ED4C990-9C42-EE11-BDF4-0022482A939E}*/, "'/>",
           "    </filter>",
           "  </entity>",
           "</fetch>"
@@ -244,7 +245,7 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({
   } = useCollection(tableRowData, {
     propertyFiltering: {
       filteringProperties,
-      empty: <TableEmptyState resourceName="No data" />,
+      empty: <TableEmptyState resourceName="No results" />,
       noMatch: (
         <TableNoMatchState
           onClearFilter={() => {

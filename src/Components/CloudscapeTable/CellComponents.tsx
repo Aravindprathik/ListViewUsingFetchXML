@@ -38,7 +38,7 @@ export const getDataToDisplay = (
           console.log("handleCLick ", primaryEntityName);
           pcfContext.navigation.openForm({
             entityName: primaryEntityName,
-            entityId: data[primaryEntityName + "id"],
+            entityId: item[primaryEntityName + "id"],
           });
         };
         return <Link onFollow={() => handleCLick()}>{data}</Link>;

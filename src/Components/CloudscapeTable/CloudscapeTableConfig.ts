@@ -88,6 +88,8 @@ export function generateColumnDefinitions(
         id: dataEntity.fieldName,
         header: dataEntity.displayName,
         width: dataEntity.minWidth | 150,
+        minWidth:dataEntity.minWidth | 150,
+        maxWidth: dataEntity.maxWidth | 200,
         cell: (item: any) => getDataToDisplay(item, dataEntity, pcfContext, primaryEntityName),
         sortingField: dataEntity.fieldName,
       } as TableProps.ColumnDefinition<DataEntity>;

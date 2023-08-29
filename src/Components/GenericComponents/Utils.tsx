@@ -18,12 +18,8 @@ export const TableEmptyState = ({ resourceName }: { resourceName: string }) => (
   <Box margin={{ vertical: "xs" }} textAlign="center" color="inherit">
     <SpaceBetween size="xxs">
       <div>
-        <b>No {resourceName.toLowerCase()}s</b>
-        <Box variant="p" color="inherit">
-          No {resourceName.toLowerCase()}s associated with this resource.
-        </Box>
+        <b>{resourceName}</b>
       </div>
-      <Button>Create {resourceName.toLowerCase()}</Button>
     </SpaceBetween>
   </Box>
 );
