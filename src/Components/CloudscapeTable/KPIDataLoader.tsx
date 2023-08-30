@@ -88,8 +88,9 @@ export const KPIDataLoader: React.FC<KPIDataLoaderProps> = ({ kpiEntityId, kpiEn
                     const parsedData = modifyRowData(rawItemData, _finalColumnLayout);
                     console.log("modifyRowData ", JSON.stringify(parsedData));
                     setAllItems(parsedData);
-                    setDataLoadingStatus("success");
                   }
+
+                  setDataLoadingStatus("success");
                 },
                 (e: any) => {
                   console.error("An error occurred:", e);
