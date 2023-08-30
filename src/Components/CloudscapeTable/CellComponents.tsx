@@ -19,6 +19,24 @@ export const getDataToDisplay = (
 
 
   switch (dataType) {
+    case "date":
+      if (data) {
+        const modifiedCellData = moment(data).format(dataEntity.metadata.dateFormat || DefaultDateFormat)
+        return <Box>{`${modifiedCellData}`}</Box>
+      }
+      return "";
+    case "dateTime":
+      if (data) {
+        const modifiedCellData = moment(data).format(dataEntity.metadata.dateFormat || DefaultDateTimeFormat);
+        return <Box>{`${modifiedCellData}`}</Box>
+      }
+      return "";
+    case "boolean":
+      if (data) {
+        const modifiedCellData = data ? "Yes" : "No";
+        return <Box>{`${modifiedCellData}`}</Box>
+      }
+      return "";
     case "link":
       if (data) {
         const handleCLick = () => {

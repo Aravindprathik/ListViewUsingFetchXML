@@ -125,15 +125,10 @@ export const KPIDataLoader: React.FC<KPIDataLoaderProps> = ({ kpiEntityId, kpiEn
   function modifyRowData(rowData: any[], allColumns: DynamicColumnDetails): any[] {
     const modifiedData = rowData.map((row) => {
       const modifiedRow = { ...row };
-      const _FORMATTEDVALUE = "@OData.Community.Display.V1.FormattedValue";
 
       allColumns.data.forEach((dataEntity) => {
         if (dataEntity.fieldName in row) {
           let originalData = row[dataEntity.fieldName];
-
-          if (row[dataEntity.fieldName + _FORMATTEDVALUE]) {
-            originalData = row[dataEntity.fieldName + _FORMATTEDVALUE];
-          }
 
           if (dataEntity.metadata.type === "date") {
             modifiedRow[dataEntity.fieldName] = moment(originalData).format(dataEntity.metadata.dateFormat || DefaultDateFormat);
