@@ -1,6 +1,6 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import "@cloudscape-design/global-styles/index.css";
-import CloudscapeTable, { CloudscapeTableProps } from "./Components/CloudscapeTable/CloudscapeTable";
+import CloudscapeTable, { CloudscapeTableProps } from "./Components/CloudscapeTable/KPIDataLoader";
 import * as React from "react";
 
 export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInputs, IOutputs> {

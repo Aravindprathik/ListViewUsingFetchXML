@@ -1,24 +1,26 @@
+import { Box, Checkbox, CollectionPreferences, PropertyFilterProps, SpaceBetween } from "@cloudscape-design/components";
 import * as React from "react";
-import { Box, Button, Checkbox, CollectionPreferences, PropertyFilterProps, SpaceBetween } from "@cloudscape-design/components";
 
-export const TableNoMatchState = ({ onClearFilter }: { onClearFilter: () => void }) => (
+export const TableNoMatchState: React.FC = () => {
+  return (
+    <Box margin={{ vertical: "xs" }} textAlign="center" color="inherit">
+      <SpaceBetween size="xxs">
+        <div>
+          <b>No matches</b>
+          <Box variant="p" color="inherit">
+            {"We cant find a match."}
+          </Box>
+        </div>
+      </SpaceBetween>
+    </Box>
+  );
+};
+
+export const TableEmptyState: React.FC = () => (
   <Box margin={{ vertical: "xs" }} textAlign="center" color="inherit">
     <SpaceBetween size="xxs">
       <div>
-        <b>No matches</b>
-        <Box variant="p" color="inherit">
-          {"We cant find a match."}
-        </Box>
-      </div>
-    </SpaceBetween>
-  </Box>
-);
-
-export const TableEmptyState = ({ resourceName }: { resourceName: string }) => (
-  <Box margin={{ vertical: "xs" }} textAlign="center" color="inherit">
-    <SpaceBetween size="xxs">
-      <div>
-        <b>{resourceName}</b>
+        <b>{"No results"}</b>
       </div>
     </SpaceBetween>
   </Box>
