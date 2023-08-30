@@ -1,47 +1,21 @@
 import * as React from "react";
 import { DataEntity } from "./CloudscapeInterface";
+import { Box, Link } from "@cloudscape-design/components";
 import * as moment from "moment-timezone";
-import { Link } from "@cloudscape-design/components";
-import { IInputs } from "../../generated/ManifestTypes";
 
-
-const _LOOKUPLOGICALNAMEATTRIBUTE = "@Microsoft.Dynamics.CRM.lookuplogicalname";
-const _FORMATTEDVALUE = "@OData.Community.Display.V1.FormattedValue";
-const _ATTRIBUTENAME = "@OData.Community.Display.V1.AttributeName";
+export const DefaultDateFormat = "YYYY-MM-DD";
+export const DefaultDateTimeFormat = "YYYY-MM-DD HH:mm:ss";
 
 export const getDataToDisplay = (
   item: any,
   dataEntity: DataEntity,
-  pcfContext: ComponentFramework.Context<IInputs>,
+  pcfContext: any,
   primaryEntityName: string
 ) => {
   const dataType = dataEntity.metadata.type;
-  let data = item[dataEntity.fieldName] ? item[dataEntity.fieldName] : "";
-
-
-  if (item[dataEntity.fieldName + _FORMATTEDVALUE]) {
-    data = item[dataEntity.fieldName + _FORMATTEDVALUE];
-  }
+  const data = item[dataEntity.fieldName] ? item[dataEntity.fieldName] : "";
 
   switch (dataType) {
-    case "date":
-      if (data) {
-        const desiredFormat = dataEntity?.metadata?.dateFormat
-          ? dataEntity?.metadata?.dateFormat
-          : "YYYY-MM-DD";
-        return moment(data).format(desiredFormat);
-      }
-      return ""; // Use your desired format
-    case "dateTime":
-      if (data) {
-        const desiredFormat = dataEntity?.metadata?.dateFormat
-          ? dataEntity?.metadata?.dateFormat
-          : "YYYY-MM-DD HH:mm:ss";
-        return moment(data).format(desiredFormat);
-      }
-      return "";
-    case "boolean":
-      return data ? "Yes" : "No";
     case "link":
       if (data) {
         const handleCLick = () => {
@@ -66,13 +40,10 @@ export const getDataToDisplay = (
     default:
       return (
         <>
-          <span>{`${data}`}</span>
+          <Box>{`${data}`}</Box>
+          {/* Future examles  */}
+          {/* <Box textAlign="center">{`${data}`}</Box> */}
         </>
       );
   }
 };
-
-// this._pcfContext.navigation.openForm({
-//   entityName: this._primaryEntityName,
-//   entityId: item[this._primaryEntityName + "id"]
-// });
