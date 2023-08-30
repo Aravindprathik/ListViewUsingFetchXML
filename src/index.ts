@@ -1,7 +1,7 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import "@cloudscape-design/global-styles/index.css";
-import CloudscapeTable, { CloudscapeTableProps } from "./Components/CloudscapeTable/KPIDataLoader";
 import * as React from "react";
+import { KPIDataLoader, KPIDataLoaderProps } from "./Components/CloudscapeTable/KPIDataLoader";
 
 export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInputs, IOutputs> {
     private theComponent: ComponentFramework.ReactControl<IInputs, IOutputs>;
@@ -118,14 +118,14 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
         // debugger;  // eslint-disable-line no-debugger
         // let props = { columns: this._columnLayout, primaryEntityName: this._primaryEntityName, fetchXml: this._fetchXML, isDebugMode: this._isDebugMode, context: context, baseD365Url: this._baseEnvironmentUrl };
-        let props : CloudscapeTableProps = {
+        let props : KPIDataLoaderProps = {
             kpiEntityId :this._kpiEntityId != null ?this._kpiEntityId.toString() :this._context.parameters.KPILookup.raw[0].id.toString(),
             kpiEntityName : this._kpiEntityName,
             pcfContext: this._context,
             itemsPerPage : this._itemsPerPage || 10
         }
         console.log("KPIidUpdateView : ",this._context.parameters.KPILookup.raw.toString());
-        return React.createElement(CloudscapeTable, props);
+        return React.createElement(KPIDataLoader, props);
 
         // TODO: Is it possible to support a grid without a columnlayout?
         // i.e. Create a default columnListLayout from the data

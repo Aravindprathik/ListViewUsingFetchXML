@@ -1,31 +1,24 @@
-import { Box, CollectionPreferencesProps, Header, Pagination, PropertyFilter, PropertyFilterProps, Table, TableProps } from "@cloudscape-design/components";
-import {
-  BLANK_SEARCH_AND,
-  DEFAULT_PAGE_SIZE_IS_20,
-  extractFieldNamesForDefaultVisibleContent,
-  generateColumnDefinitions,
-  generateFilteringProperties,
-  generateVisibleContentOptions,
-} from "./CloudscapeTableConfig";
-import { DynamicColumnDetails } from "./CloudscapeInterface";
-import { Preferences, TableEmptyState, TableNoMatchState, getMatchesCountText, paginationAriaLabels, propertyFilterI18nStrings } from "../GenericComponents/Utils";
-import { useCollection } from "@cloudscape-design/collection-hooks";
+import { TableProps } from "@cloudscape-design/components";
+import * as moment from "moment-timezone";
 import * as React from "react";
 import { useEffect } from "react";
 import { IInputs } from "../../generated/ManifestTypes";
-import * as moment from "moment-timezone";
-import { DefaultDateFormat, DefaultDateTimeFormat } from "./CellComponents";
-import LoadingSpinner from "../GenericComponents/LoadingSpinner";
 import ErrorContainer from "../GenericComponents/ErrorContainer";
+import LoadingSpinner from "../GenericComponents/LoadingSpinner";
+import { DefaultDateFormat, DefaultDateTimeFormat } from "./CellComponents";
 import { CloudscapeGenericTable } from "./CloudscapeGenericTable";
+import { DynamicColumnDetails } from "./CloudscapeInterface";
+import {
+  generateColumnDefinitions
+} from "./CloudscapeTableConfig";
 
-export interface CloudscapeTableProps {
+export interface KPIDataLoaderProps {
   kpiEntityId: string;
   kpiEntityName: string;
   pcfContext: ComponentFramework.Context<IInputs>;
   itemsPerPage: number;
 }
-const CloudscapeTable: React.FC<CloudscapeTableProps> = ({ kpiEntityId, kpiEntityName, pcfContext, itemsPerPage }) => {
+export const KPIDataLoader: React.FC<KPIDataLoaderProps> = ({ kpiEntityId, kpiEntityName, pcfContext, itemsPerPage }) => {
   const [dataLoadingStatus, setDataLoadingStatus] = React.useState<"loading" | "error" | "success">("loading");
 
   const [primaryEntity, setPrimaryEntityName] = React.useState("");
@@ -41,10 +34,11 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({ kpiEntityId, kpiEntit
       console.log("columnDefinitions ", columnDefinitions);
       setTableColumnDefinitions(columnDefinitions);
     }
-  }, [allColumns]);
+  }, [allColumns, pcfContext, primaryEntity]);
 
   useEffect(() => {
     dynamicsHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pcfContext]);
 
   const dynamicsHandler = async () => {
@@ -55,7 +49,7 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({ kpiEntityId, kpiEntit
         var fetchData = {
           cb_kpimasterdataid: kpiEntityId,
         };
-        console.log("fetchData.cb_kpimasterdataid", fetchData.cb_kpimasterdataid);
+        // console.log("fetchData.cb_kpimasterdataid", fetchData.cb_kpimasterdataid);
         var fetchXml = [
           "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>",
           "  <entity name='cb_kpimasterdata'>",
@@ -77,31 +71,22 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({ kpiEntityId, kpiEntit
           (results: any) => {
             if (results && results.entities && results.entities.length > 0) {
               var firstKpiEntity = results.entities;
-              console.log("firstKpiEntity ", firstKpiEntity);
-
               let cb_fetchxml = firstKpiEntity[0].cb_fetchxml;
-              console.log("cb_fetchxml ", cb_fetchxml);
-
               let _columnlayout = firstKpiEntity[0].cb_columnlayout;
-              console.log("cb_columnlayout ", JSON.stringify(_columnlayout));
-
               let _finalColumnLayout = _columnlayout != null ? JSON.parse(_columnlayout) : null;
-
               let fetchXML_AllItems = cb_fetchxml.replace(/"/g, "'");
-              console.log("fetchXML_AllItems : ", fetchXML_AllItems);
-
               const _primaryEntityName = getPrimaryEntityNameFromFetchXml(fetchXML_AllItems);
-              console.log("primaryEntityName ", _primaryEntityName);
 
               setPrimaryEntityName(_primaryEntityName);
+              console.log("_finalColumnLayout ", JSON.stringify(_finalColumnLayout));
               setAllColumns(_finalColumnLayout);
 
               pcfContext.webAPI.retrieveMultipleRecords(_primaryEntityName, "?fetchXml=" + encodeURIComponent(fetchXML_AllItems)).then(
                 (results: any) => {
                   if (results && results.entities && results.entities.length > 0) {
                     const rawItemData = results.entities;
-
                     const parsedData = modifyRowData(rawItemData, _finalColumnLayout);
+                    console.log("modifyRowData ", JSON.stringify(parsedData));
                     setAllItems(parsedData);
                     setDataLoadingStatus("success");
                   }
@@ -180,4 +165,3 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({ kpiEntityId, kpiEntit
   );
 };
 
-export default CloudscapeTable;

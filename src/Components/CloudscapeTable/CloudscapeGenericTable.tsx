@@ -12,7 +12,6 @@ interface CloudscapeGenericTableProps {
   itemsPerPage: number;
 }
 export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ tableColumnDefinitions, allColumns, allItems, itemsPerPage }) => {
-  console.log("allColumns?.columnInfo?.sortingColumn ", allColumns?.columnInfo?.sortingColumn);
 
   const [tableRowData, setTableRowData] = React.useState<any[]>([]);
 
@@ -28,6 +27,7 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
 
   React.useEffect(() => {
     setTableRowData(allItems || []);
+    console.log("All Items ", JSON.stringify(allItems));
   }, [allItems]);
 
   // generating Table default preferences from allColumns

@@ -22,7 +22,6 @@ export const getDataToDisplay = (
     case "link":
       if (data) {
         const handleCLick = () => {
-          console.log("handleCLick ", primaryEntityName);
           pcfContext.navigation.openForm({
             entityName: primaryEntityName,
             entityId: item[primaryEntityName + "id"],
