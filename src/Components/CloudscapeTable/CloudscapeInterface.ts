@@ -14,6 +14,7 @@ export interface DataEntity {
   fieldName: string;
   displayName: string;
   isColumnVisible : boolean;
+  isFilterable : boolean;
   minWidth: number;
   maxWidth: number;
   metadata: Metadata;

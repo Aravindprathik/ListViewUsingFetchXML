@@ -3,8 +3,10 @@ import { DataEntity } from "./CloudscapeInterface";
 import { Box, Link } from "@cloudscape-design/components";
 import * as moment from "moment-timezone";
 
-export const DefaultDateFormat = "YYYY-MM-DD";
-export const DefaultDateTimeFormat = "YYYY-MM-DD HH:mm:ss";
+export const DefaultDateFormat = "MM/DD/YYYY";
+export const DefaultDateTimeFormat = "MM/DD/YYYY hh:mm A";
+
+//const _FORMATTEDVALUE = "@OData.Community.Display.V1.FormattedValue";
 
 export const getDataToDisplay = (
   item: any,
@@ -14,6 +16,7 @@ export const getDataToDisplay = (
 ) => {
   const dataType = dataEntity.metadata.type;
   const data = item[dataEntity.fieldName] ? item[dataEntity.fieldName] : "";
+
 
   switch (dataType) {
     case "link":

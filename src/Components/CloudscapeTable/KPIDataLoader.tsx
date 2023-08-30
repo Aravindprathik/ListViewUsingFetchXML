@@ -99,9 +99,9 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({ kpiEntityId, kpiEntit
               pcfContext.webAPI.retrieveMultipleRecords(_primaryEntityName, "?fetchXml=" + encodeURIComponent(fetchXML_AllItems)).then(
                 (results: any) => {
                   if (results && results.entities && results.entities.length > 0) {
-                    const _allItems = results.entities;
+                    const rawItemData = results.entities;
 
-                    const parsedData = modifyRowData(_allItems, _finalColumnLayout);
+                    const parsedData = modifyRowData(rawItemData, _finalColumnLayout);
                     setAllItems(parsedData);
                     setDataLoadingStatus("success");
                   }
@@ -139,29 +139,27 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({ kpiEntityId, kpiEntit
   function modifyRowData(rowData: any[], allColumns: DynamicColumnDetails): any[] {
     const modifiedData = rowData.map((row) => {
       const modifiedRow = { ...row };
+      const _FORMATTEDVALUE = "@OData.Community.Display.V1.FormattedValue";
 
       allColumns.data.forEach((dataEntity) => {
-        if (dataEntity.isColumnVisible && dataEntity.fieldName in row) {
+        if (dataEntity.fieldName in row) {
+          let originalData = row[dataEntity.fieldName];
+
+          if (row[dataEntity.fieldName + _FORMATTEDVALUE]) {
+            originalData = row[dataEntity.fieldName + _FORMATTEDVALUE];
+          }
+
           if (dataEntity.metadata.type === "date") {
-            const originalDate = row[dataEntity.fieldName];
-            if (originalDate) {
-              modifiedRow[dataEntity.fieldName] = moment(originalDate).format(dataEntity.metadata.dateFormat || DefaultDateFormat);
-            }
+            modifiedRow[dataEntity.fieldName] = moment(originalData).format(dataEntity.metadata.dateFormat || DefaultDateFormat);
           }
 
           if (dataEntity.metadata.type === "dateTime") {
-            const originalDate = row[dataEntity.fieldName];
-            if (originalDate) {
-              modifiedRow[dataEntity.fieldName] = moment(originalDate).format(dataEntity.metadata.dateFormat || DefaultDateTimeFormat);
-            }
+            modifiedRow[dataEntity.fieldName] = moment(originalData).format(dataEntity.metadata.dateFormat || DefaultDateTimeFormat);
           }
 
           if (dataEntity.metadata.type === "boolean") {
-            const originalData = row[dataEntity.fieldName];
             modifiedRow[dataEntity.fieldName] = originalData ? "Yes" : "No";
           }
-
-          // Add more conditions for other data types if needed
         }
       });
 

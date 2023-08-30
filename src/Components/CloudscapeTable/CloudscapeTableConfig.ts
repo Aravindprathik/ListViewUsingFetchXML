@@ -48,11 +48,10 @@ export function generateVisibleContentOptions(
   return [];
 }
 
-export function generateFilteringProperties(
-  dynamicColumnDetails: DynamicColumnDetails
-): FilteringProperty[] {
-  const filteringProperties: FilteringProperty[] =
-    dynamicColumnDetails.data.map((dataEntity: DataEntity) => {
+export function generateFilteringProperties(dynamicColumnDetails: DynamicColumnDetails): FilteringProperty[] {
+  const filteringProperties: FilteringProperty[] = dynamicColumnDetails.data
+    .filter((items: DataEntity) => items.isFilterable)
+    .map((dataEntity: DataEntity) => {
       const dataType: ColumnDataType = dataEntity.metadata.type;
       let operators: string[] = [];
 
