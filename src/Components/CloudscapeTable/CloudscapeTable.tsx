@@ -29,17 +29,18 @@ import { useCollection } from "@cloudscape-design/collection-hooks";
 import * as React from "react";
 import { useEffect } from "react";
 import { IInputs } from "../../generated/ManifestTypes";
-import { json } from "stream/consumers";
 
-interface CloudscapeTableProps {
+export interface CloudscapeTableProps {
   kpiEntityId: string;
   kpiEntityName: string;
   pcfContext: ComponentFramework.Context<IInputs>;
+  itemsPerPage : number;
 }
 const CloudscapeTable: React.FC<CloudscapeTableProps> = ({
   kpiEntityId,
   kpiEntityName,
   pcfContext,
+  itemsPerPage
 }) => {
   const [dataLoading, setDataLoading] = React.useState(false);
   const [dataLoadingStatus, setDataLoadingStatus] = React.useState<

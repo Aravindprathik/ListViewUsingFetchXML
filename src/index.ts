@@ -1,6 +1,6 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import "@cloudscape-design/global-styles/index.css";
-import CloudscapeTable from "./Components/CloudscapeTable/CloudscapeTable";
+import CloudscapeTable, { CloudscapeTableProps } from "./Components/CloudscapeTable/CloudscapeTable";
 import * as React from "react";
 
 export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInputs, IOutputs> {
@@ -49,7 +49,7 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
         this._notifyOutputChanged = notifyOutputChanged;
         this._container = container;
         this._isDebugMode = false;
-        this._itemsPerPage = 5000;
+        this._itemsPerPage = 20;
 
        /* if (this._context.parameters.DebugMode) {
             this._isDebugMode = this._context.parameters.DebugMode.raw == "1";
@@ -118,10 +118,11 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
         // debugger;  // eslint-disable-line no-debugger
         // let props = { columns: this._columnLayout, primaryEntityName: this._primaryEntityName, fetchXml: this._fetchXML, isDebugMode: this._isDebugMode, context: context, baseD365Url: this._baseEnvironmentUrl };
-        let props = {
+        let props : CloudscapeTableProps = {
             kpiEntityId :this._kpiEntityId != null ?this._kpiEntityId.toString() :this._context.parameters.KPILookup.raw[0].id.toString(),
             kpiEntityName : this._kpiEntityName,
-            pcfContext: this._context
+            pcfContext: this._context,
+            itemsPerPage : this._itemsPerPage || 10
         }
         console.log("KPIidUpdateView : ",this._context.parameters.KPILookup.raw.toString());
         return React.createElement(CloudscapeTable, props);

@@ -4,6 +4,11 @@ import * as moment from "moment-timezone";
 import { Link } from "@cloudscape-design/components";
 import { IInputs } from "../../generated/ManifestTypes";
 
+
+const _LOOKUPLOGICALNAMEATTRIBUTE = "@Microsoft.Dynamics.CRM.lookuplogicalname";
+const _FORMATTEDVALUE = "@OData.Community.Display.V1.FormattedValue";
+const _ATTRIBUTENAME = "@OData.Community.Display.V1.AttributeName";
+
 export const getDataToDisplay = (
   item: any,
   dataEntity: DataEntity,
@@ -11,7 +16,12 @@ export const getDataToDisplay = (
   primaryEntityName: string
 ) => {
   const dataType = dataEntity.metadata.type;
-  const data = item[dataEntity.fieldName] ? item[dataEntity.fieldName] : "";
+  let data = item[dataEntity.fieldName] ? item[dataEntity.fieldName] : "";
+
+
+  if (item[dataEntity.fieldName + _FORMATTEDVALUE]) {
+    data = item[dataEntity.fieldName + _FORMATTEDVALUE];
+  }
 
   switch (dataType) {
     case "date":
