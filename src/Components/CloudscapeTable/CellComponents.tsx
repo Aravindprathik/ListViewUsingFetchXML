@@ -17,40 +17,7 @@ export const getDataToDisplay = (
   const dataType = dataEntity.metadata.type;
   const data = item[dataEntity.fieldName] ? item[dataEntity.fieldName] : "";
 
-
   switch (dataType) {
-    case "date":
-      if (data) {
-        //const modifiedCellData = moment(data).format(dataEntity.metadata.dateFormat || DefaultDateFormat)
-        //return <Box>{`${modifiedCellData}`}</Box>
-        return data;
-      }
-      return "";
-    case "dateTime":
-      if (data) {
-        // const modifiedCellData = moment(data).format(dataEntity.metadata.dateFormat || DefaultDateTimeFormat);
-        // return <Box>{`${modifiedCellData}`}</Box>
-        return data;
-      }
-      return "";
-    case "date1":
-      if (data) {
-        const modifiedCellData = moment(data).format(dataEntity.metadata.dateFormat || DefaultDateFormat)
-        return <Box>{`${modifiedCellData}`}</Box>
-      }
-      return "";
-    case "dateTime1":
-      if (data) {
-        const modifiedCellData = moment(data).format(dataEntity.metadata.dateFormat || DefaultDateTimeFormat);
-        return <Box>{`${modifiedCellData}`}</Box>
-      }
-      return "";
-    case "boolean":
-      if (data) {
-        const modifiedCellData = data ? "Yes" : "No";
-        return <Box>{`${modifiedCellData}`}</Box>
-      }
-      return "";
     case "link":
       if (data) {
         const handleCLick = () => {

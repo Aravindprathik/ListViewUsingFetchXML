@@ -122,21 +122,20 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
         // debugger;  // eslint-disable-line no-debugger
 
-        // let props : KPIDataLoaderProps = {
-        //     kpiEntityId :this._kpiEntityId != null ?this._kpiEntityId.toString() :this._context.parameters.KPILookup.raw[0].id.toString(),
-        //     kpiEntityName : this._kpiEntityName,
-        //     pcfContext: this._context,
-        //     itemsPerPage : this._itemsPerPage || 10
-        // }
-        // console.log("KPIidUpdateView : ",this._context.parameters.KPILookup.raw.toString());
-        // return React.createElement(KPIDataLoader, props);
+        let props : KPIDataLoaderProps = {
+            kpiEntityId :this._kpiEntityId != null ?this._kpiEntityId.toString() :this._context.parameters.KPILookup.raw[0].id.toString(),
+            kpiEntityName : this._kpiEntityName,
+            pcfContext: this._context,
+            itemsPerPage : this._itemsPerPage || 10
+        }
+        console.log("KPIidUpdateView : ",this._context.parameters.KPILookup.raw.toString());
+        return React.createElement(KPIDataLoader, props);
 
-        const columnDefinitions = generateColumnDefinitions(column_Mock, " ", "");
-        const props: CloudscapeGenericTableProps = { tableColumnDefinitions: columnDefinitions, allColumns: column_Mock, allItems: RowData, itemsPerPage: 20 };
-        return React.createElement(CloudscapeGenericTable, props);
-        // TODO: Is it possible to support a grid without a columnlayout?
-        // i.e. Create a default columnListLayout from the data
-
+        // The below code is to make this code to run in local.
+        // const columnDefinitions = generateColumnDefinitions(column_Mock, " ", "");
+        // const props: CloudscapeGenericTableProps = { tableColumnDefinitions: columnDefinitions, allColumns: column_Mock, allItems: RowData, itemsPerPage: 20 };
+        // return React.createElement(CloudscapeGenericTable, props);
+        
     }
 
     /**

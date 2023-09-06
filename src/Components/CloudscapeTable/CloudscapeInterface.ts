@@ -20,7 +20,7 @@ export interface DataEntity {
   metadata: Metadata;
 }
 
-export type ColumnDataType = 'externalLink' | 'link' | 'string' | 'date' | 'dateTime' | 'number' | 'boolean' | 'date1' | 'dateTime1';
+export type ColumnDataType = 'externalLink' | 'link' | 'string' | 'date' | 'dateTime' | 'number' | 'boolean';
 
 export interface Metadata {
   type: ColumnDataType;

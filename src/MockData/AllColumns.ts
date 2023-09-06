@@ -79,12 +79,12 @@ export const column_Mock: DynamicColumnDetails =
       "fieldName": "modifiedon@OData.Community.Display.V1.FormattedValue",
       "displayName": "Modified On",
       "isColumnVisible": false,
-      "isFilterable": false,
+      "isFilterable": true,
       "minWidth": 170,
       "maxWidth": 190,
       "metadata": {
-        "type": "date1",
-        "dateFormat": "YYYY-MM"
+        "type": "date",
+        "dateFormat": "MM/DD/YYYY"
       }
     },
     {
