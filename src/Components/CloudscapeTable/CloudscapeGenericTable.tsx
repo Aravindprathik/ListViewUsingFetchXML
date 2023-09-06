@@ -4,8 +4,6 @@ import * as React from "react";
 import { Preferences, TableEmptyState, TableNoMatchState, getMatchesCountText, paginationAriaLabels, propertyFilterI18nStrings } from "../GenericComponents/Utils";
 import { DynamicColumnDetails } from "./CloudscapeInterface";
 import { BLANK_SEARCH_AND, extractFieldNamesForDefaultVisibleContent, generateFilteringProperties, generateVisibleContentOptions } from "./CloudscapeTableConfig";
-import moment from "moment-timezone";
-import { DefaultDateFormat, DefaultDateTimeFormat } from "./CellComponents";
 
 export interface CloudscapeGenericTableProps {
   tableColumnDefinitions: TableProps.ColumnDefinition<any>[];
@@ -28,37 +26,8 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
   }, [query]);
 
   React.useEffect(() => {
-    const formattedData = modifyRowData(allItems, allColumns);
-    setTableRowData(formattedData || []);
+    setTableRowData(allItems || []);
   }, [allItems]);
-
-  function modifyRowData(rowData: any[], allColumns: DynamicColumnDetails): any[] {
-    const modifiedData = rowData.map((row) => {
-      const modifiedRow = { ...row };
-
-      allColumns.data.forEach((dataEntity) => {
-        if (dataEntity.fieldName in row) {
-          let originalData = row[dataEntity.fieldName];
-
-          if (dataEntity.metadata.type === "date") {
-            modifiedRow[dataEntity.fieldName] = moment(originalData).format(dataEntity.metadata.dateFormat || DefaultDateFormat);
-          }
-
-          if (dataEntity.metadata.type === "dateTime") {
-            modifiedRow[dataEntity.fieldName] = moment(originalData).format(dataEntity.metadata.dateFormat || DefaultDateTimeFormat);
-          }
-
-          if (dataEntity.metadata.type === "boolean") {
-            modifiedRow[dataEntity.fieldName] = originalData ? "Yes" : "No";
-          }
-        }
-      });
-
-      return modifiedRow;
-    });
-
-    return modifiedData;
-  }
 
   // generating Table default preferences from allColumns
   React.useEffect(() => {

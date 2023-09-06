@@ -17,7 +17,6 @@ export const getDataToDisplay = (
   const dataType = dataEntity.metadata.type;
   const data = item[dataEntity.fieldName] ? item[dataEntity.fieldName] : "";
 
-
   switch (dataType) {
     case "link":
       if (data) {

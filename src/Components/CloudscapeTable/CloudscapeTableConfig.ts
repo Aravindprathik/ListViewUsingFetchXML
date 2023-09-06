@@ -79,7 +79,7 @@ export function generateFilteringProperties(dynamicColumnDetails: DynamicColumnD
 
 export function generateColumnDefinitions(
   dynamicColumnDetails: DynamicColumnDetails,
-  pcfContext: any,// ComponentFramework.Context<IInputs>,
+  pcfContext: ComponentFramework.Context<IInputs>,
   primaryEntityName: string
 ): TableProps.ColumnDefinition<DataEntity>[] {
   const columnDefinitions: TableProps.ColumnDefinition<DataEntity>[] =
