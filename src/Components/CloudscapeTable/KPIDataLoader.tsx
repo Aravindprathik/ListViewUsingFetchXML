@@ -1,5 +1,5 @@
 import { TableProps } from "@cloudscape-design/components";
-import * as moment from "moment-timezone";
+import  moment from "moment-timezone";
 import * as React from "react";
 import { useEffect } from "react";
 import { IInputs } from "../../generated/ManifestTypes";

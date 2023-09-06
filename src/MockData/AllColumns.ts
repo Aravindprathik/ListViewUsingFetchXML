@@ -1,124 +1,103 @@
-/*import { DynamicColumnDetails } from "../Components/CloudscapeTable/CloudscapeInterface";
+import { DynamicColumnDetails } from "../Components/CloudscapeTable/CloudscapeInterface";
 
-export const DynamicColumns1: DynamicColumnDetails = {
+export const column_Mock: DynamicColumnDetails =
+{
   "columnInfo": {
-    "tableName": "Table Name",
-    "sortingColumn": "column1",
-    "isAscending": true
+    "tableName": "Opportunities in Appointment Set",
+    "sortingColumn": "modifiedon@OData.Community.Display.V1.FormattedValue",
+    "isAscending": false
   },
   "data": [
     {
-      "fieldName": "column1",
-      "displayName": "Column 1",
-      "minWidth": 80,
-      "maxWidth": 100,
+      "fieldName": "name",
+      "displayName": "Opportunity Name",
+      "isColumnVisible": false,
+      "isFilterable": true,
+      "minWidth": 170,
+      "maxWidth": 190,
       "metadata": {
         "type": "string"
       }
     },
     {
-      "fieldName": "column2",
-      "displayName": "Column 2",
-      "minWidth": 80,
-      "maxWidth": 100,
+      "fieldName": "parentaccountid.name",
+      "displayName": "Account Name",
+      "isColumnVisible": false,
+      "isFilterable": true,
+      "minWidth": 170,
+      "maxWidth": 190,
       "metadata": {
         "type": "string"
+      }
+    },
+    {
+      "fieldName": "cb_opportunitystage@OData.Community.Display.V1.FormattedValue",
+      "displayName": "Opportunity Stage",
+      "isColumnVisible": false,
+      "isFilterable": true,
+      "minWidth": 170,
+      "maxWidth": 190,
+      "metadata": {
+        "type": "string"
+      }
+    },
+    {
+      "fieldName": "actualvalue@OData.Community.Display.V1.FormattedValue",
+      "displayName": "SQO Proposal Amount",
+      "isColumnVisible": false,
+      "isFilterable": false,
+      "minWidth": 200,
+      "maxWidth": 200,
+      "metadata": {
+        "type": "string"
+      }
+    },
+    {
+      "fieldName": "estimatedclosedate@OData.Community.Display.V1.FormattedValue",
+      "displayName": "Projected Closed Date",
+      "isColumnVisible": false,
+      "isFilterable": false,
+      "minWidth": 200,
+      "maxWidth": 200,
+      "metadata": {
+        "type": "dateTime",
+        "dateFormat": "MM/DD/YYYY"
+      }
+    },
+    {
+      "fieldName": "cb_upsideforecast@OData.Community.Display.V1.FormattedValue",
+      "displayName": "Forecast Category",
+      "isColumnVisible": false,
+      "isFilterable": true,
+      "minWidth": 170,
+      "maxWidth": 190,
+      "metadata": {
+        "type": "string"
+      }
+    },
+    {
+      "fieldName": "modifiedon@OData.Community.Display.V1.FormattedValue",
+      "displayName": "Modified On",
+      "isColumnVisible": false,
+      "isFilterable": false,
+      "minWidth": 170,
+      "maxWidth": 190,
+      "metadata": {
+        "type": "date1",
+        "dateFormat": "YYYY-MM"
+      }
+    },
+    {
+      "fieldName": "cb_lastactivitydate@OData.Community.Display.V1.FormattedValue",
+      "displayName": "Last Activity Date",
+      "isColumnVisible": false,
+      "isFilterable": false,
+      "minWidth": 170,
+      "maxWidth": 190,
+      "metadata": {
+        "type": "date",
+        "dateFormat": "MM/DD/YYYY"
       }
     }
   ]
 }
-
-export const DynamicColumns: DynamicColumnDetails = {
-  "columnInfo": {
-    "tableName": "Table Name",
-    "sortingColumn": "fullname",
-    "isAscending": true
-  },
-  "data": [
-    {
-      "fieldName": "fullname",
-      "displayName": "Name",
-      "minWidth": 80,
-      "maxWidth": 100,
-      "metadata": {
-        "type": "link"
-      }
-    },
-    {
-      "fieldName": "companyname",
-      "displayName": "Company Name",
-      "minWidth": 80,
-      "maxWidth": 100,
-      "metadata": {
-        "type": "externalLink",
-        "link": "https://mail.google.com/mail/u/0/#inbox"
-      }
-    },
-    {
-      "fieldName": "cb_athenabusinesslegalname",
-      "displayName": "Legal Name",
-      "minWidth": 80,
-      "maxWidth": 100,
-      "metadata": {
-        "type": "string"
-      }
-    },
-    {
-      "fieldName": "address1_composite",
-      "displayName": "Address",
-      "minWidth": 80,
-      "maxWidth": 100,
-      "metadata": {
-        "type": "string"
-      }
-    },
-    {
-      "fieldName": "createdon",
-      "displayName": "Created On",
-      "minWidth": 80,
-      "maxWidth": 100,
-      "metadata": {
-        "type": "date",
-        "dateFormat": "yyyy-MM-dd"
-      }
-    },
-    {
-      "fieldName": "modifiedon",
-      "displayName": "Modified On",
-      "minWidth": 80,
-      "maxWidth": 100,
-      "metadata": {
-        "type": "dateTime",
-        "dateFormat": "yyyy-MM-dd hh:mm a"
-      }
-    },
-    {
-      "fieldName": "cb_lastactivitydate",
-      "displayName": "Last Activity Date",
-      "minWidth": 80,
-      "maxWidth": 100,
-      "metadata": {
-        "type": "date",
-        "dateFormat": "yyyy-MM-dd"
-      }
-    },
-    {
-      "fieldName": "cb_programleadsource",
-      "displayName": "Program Lead Source",
-      "minWidth": 80,
-      "maxWidth": 100,
-      "metadata": {
-        "type": "string"
-      }
-    },
-    {
-      "fieldName": "statuscode@OData.Community.Display.V1.FormattedValue",
-      "displayName": "Lead Status",
-      "minWidth": 80,
-      "maxWidth": 100,
-      "metadata": {
-        "type": "string"
-      }
-    }
-  ]
-}*/

@@ -2,6 +2,10 @@ import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import "@cloudscape-design/global-styles/index.css";
 import * as React from "react";
 import { KPIDataLoader, KPIDataLoaderProps } from "./Components/CloudscapeTable/KPIDataLoader";
+import { generateColumnDefinitions } from "./Components/CloudscapeTable/CloudscapeTableConfig";
+import { column_Mock } from "./MockData/AllColumns";
+import { CloudscapeGenericTable, CloudscapeGenericTableProps } from "./Components/CloudscapeTable/CloudscapeGenericTable";
+import { RowData } from "./MockData/AllItems";
 
 export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInputs, IOutputs> {
     private theComponent: ComponentFramework.ReactControl<IInputs, IOutputs>;
@@ -13,8 +17,8 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
     private _isDebugMode: boolean;
     private _baseEnvironmentUrl?: string;
     private _itemsPerPage: number | null;
-    private _kpiEntityId : string;
-    private _kpiEntityName : string;
+    private _kpiEntityId: string;
+    private _kpiEntityName: string;
     // private _totalNumberOfRecords: number;    
 
     /** General */
@@ -51,22 +55,22 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
         this._isDebugMode = false;
         this._itemsPerPage = 20;
 
-       /* if (this._context.parameters.DebugMode) {
-            this._isDebugMode = this._context.parameters.DebugMode.raw == "1";
-        }*/
+        /* if (this._context.parameters.DebugMode) {
+             this._isDebugMode = this._context.parameters.DebugMode.raw == "1";
+         }*/
 
         // If you want this to break every time you set isDebugMode to true
         //if (this._isDebugMode) { 
         //    debugger;  // eslint-disable-line no-debugger        
         //}
 
-       /*  if (this._context.parameters.ItemsPerPage) {
-            this._itemsPerPage = this._context.parameters.ItemsPerPage.raw;
-        }*/
+        /*  if (this._context.parameters.ItemsPerPage) {
+             this._itemsPerPage = this._context.parameters.ItemsPerPage.raw;
+         }*/
 
         // TODO: Validate the input parameters to make sure we get a friendly error instead of weird errors
-       /*  var fetchXML: string | null = this._context.parameters.FetchXml.raw;
-        var recordIdPlaceholder: string | null = this._context.parameters.RecordIdPlaceholder.raw; // ?? "";  */
+        /*  var fetchXML: string | null = this._context.parameters.FetchXml.raw;
+         var recordIdPlaceholder: string | null = this._context.parameters.RecordIdPlaceholder.raw; // ?? "";  */
 
         // This is just the simple control where the subgrid will be placed on the form
         var controlAnchorField: string | null = this._context.parameters.ControlAnchorField.raw;
@@ -74,17 +78,17 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
 
         // Other values if we need them
         this._kpiEntityId = this._context.parameters.KPILookup.raw[0].id;
-        console.log("KPIidInitView : ",this._kpiEntityId);
+        console.log("KPIidInitView : ", this._kpiEntityId);
         this._kpiEntityName = this._context.parameters.KPILookup.raw[0].entityType;
-        console.log("kpiEntityId : ",this._kpiEntityId, " kpiEntityName : ", this._kpiEntityName);
+        console.log("kpiEntityId : ", this._kpiEntityId, " kpiEntityName : ", this._kpiEntityName);
         let entityId = (<any>this._context.mode).contextInfo.entityId;
         let entityTypeName = (<any>this._context.mode).contextInfo.entityTypeName;
         let entityDisplayName = (<any>this._context.mode).contextInfo.entityRecordName;
-        console.log("entityTypeName : ",entityTypeName, " entityDisplayName : ", entityDisplayName);
+        console.log("entityTypeName : ", entityTypeName, " entityDisplayName : ", entityDisplayName);
         // This breaks when you use the PCF Test Harness.  Neat!
         try {
             this._baseEnvironmentUrl = (<any>this._context)?.page?.getClientUrl();
-            console.log("_baseEnvironmentUrl : ",this._baseEnvironmentUrl, " entityDisplayName : ", entityDisplayName);
+            console.log("_baseEnvironmentUrl : ", this._baseEnvironmentUrl, " entityDisplayName : ", entityDisplayName);
         }
         catch (ex) {
             this._baseEnvironmentUrl = "https://localhost";
@@ -117,16 +121,19 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
      */
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
         // debugger;  // eslint-disable-line no-debugger
-        // let props = { columns: this._columnLayout, primaryEntityName: this._primaryEntityName, fetchXml: this._fetchXML, isDebugMode: this._isDebugMode, context: context, baseD365Url: this._baseEnvironmentUrl };
-        let props : KPIDataLoaderProps = {
-            kpiEntityId :this._kpiEntityId != null ?this._kpiEntityId.toString() :this._context.parameters.KPILookup.raw[0].id.toString(),
-            kpiEntityName : this._kpiEntityName,
-            pcfContext: this._context,
-            itemsPerPage : this._itemsPerPage || 10
-        }
-        console.log("KPIidUpdateView : ",this._context.parameters.KPILookup.raw.toString());
-        return React.createElement(KPIDataLoader, props);
 
+        // let props : KPIDataLoaderProps = {
+        //     kpiEntityId :this._kpiEntityId != null ?this._kpiEntityId.toString() :this._context.parameters.KPILookup.raw[0].id.toString(),
+        //     kpiEntityName : this._kpiEntityName,
+        //     pcfContext: this._context,
+        //     itemsPerPage : this._itemsPerPage || 10
+        // }
+        // console.log("KPIidUpdateView : ",this._context.parameters.KPILookup.raw.toString());
+        // return React.createElement(KPIDataLoader, props);
+
+        const columnDefinitions = generateColumnDefinitions(column_Mock, " ", "");
+        const props: CloudscapeGenericTableProps = { tableColumnDefinitions: columnDefinitions, allColumns: column_Mock, allItems: RowData, itemsPerPage: 20 };
+        return React.createElement(CloudscapeGenericTable, props);
         // TODO: Is it possible to support a grid without a columnlayout?
         // i.e. Create a default columnListLayout from the data
 

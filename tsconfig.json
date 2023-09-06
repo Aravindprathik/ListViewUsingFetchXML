@@ -1,11 +1,26 @@
 {
-    "extends": "./node_modules/pcf-scripts/tsconfig_base.json",
     "compilerOptions": {
-        "typeRoots": [
-            "node_modules/@types"
-        ],
-        "resolveJsonModule": true,
         "target": "ES6",
-        "esModuleInterop": false
-    }
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "esnext"
+        ],
+        "allowJs": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": false,
+        "forceConsistentCasingInFileNames": true,
+        "noFallthroughCasesInSwitch": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": false,
+        "noEmitOnError": false,
+        "jsx": "react-jsx"
+    },
+    "include": [
+        "src"
+    ]
 }

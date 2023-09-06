@@ -5,7 +5,7 @@ import { Preferences, TableEmptyState, TableNoMatchState, getMatchesCountText, p
 import { DynamicColumnDetails } from "./CloudscapeInterface";
 import { BLANK_SEARCH_AND, extractFieldNamesForDefaultVisibleContent, generateFilteringProperties, generateVisibleContentOptions } from "./CloudscapeTableConfig";
 
-interface CloudscapeGenericTableProps {
+export interface CloudscapeGenericTableProps {
   tableColumnDefinitions: TableProps.ColumnDefinition<any>[];
   allColumns: DynamicColumnDetails;
   allItems: any[];
@@ -27,7 +27,6 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
 
   React.useEffect(() => {
     setTableRowData(allItems || []);
-    console.log("All Items ", JSON.stringify(allItems));
   }, [allItems]);
 
   // generating Table default preferences from allColumns

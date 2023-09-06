@@ -1,7 +1,7 @@
 import * as React from "react";
 import { DataEntity } from "./CloudscapeInterface";
 import { Box, Link } from "@cloudscape-design/components";
-import * as moment from "moment-timezone";
+import  moment from "moment-timezone";
 
 export const DefaultDateFormat = "MM/DD/YYYY";
 export const DefaultDateTimeFormat = "MM/DD/YYYY hh:mm A";
@@ -21,11 +21,25 @@ export const getDataToDisplay = (
   switch (dataType) {
     case "date":
       if (data) {
+        //const modifiedCellData = moment(data).format(dataEntity.metadata.dateFormat || DefaultDateFormat)
+        //return <Box>{`${modifiedCellData}`}</Box>
+        return data;
+      }
+      return "";
+    case "dateTime":
+      if (data) {
+        // const modifiedCellData = moment(data).format(dataEntity.metadata.dateFormat || DefaultDateTimeFormat);
+        // return <Box>{`${modifiedCellData}`}</Box>
+        return data;
+      }
+      return "";
+    case "date1":
+      if (data) {
         const modifiedCellData = moment(data).format(dataEntity.metadata.dateFormat || DefaultDateFormat)
         return <Box>{`${modifiedCellData}`}</Box>
       }
       return "";
-    case "dateTime":
+    case "dateTime1":
       if (data) {
         const modifiedCellData = moment(data).format(dataEntity.metadata.dateFormat || DefaultDateTimeFormat);
         return <Box>{`${modifiedCellData}`}</Box>
