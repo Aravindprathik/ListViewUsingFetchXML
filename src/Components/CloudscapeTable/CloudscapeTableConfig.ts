@@ -13,6 +13,7 @@ import {
 } from "@cloudscape-design/components";
 import { getDataToDisplay } from "./CellComponents";
 import { IInputs } from "../../generated/ManifestTypes";
+import moment from "moment-timezone";
 
 export const DEFAULT_PAGE_SIZE_IS_20 = 20;
 export const BLANK_SEARCH_AND = {
@@ -87,10 +88,17 @@ export function generateColumnDefinitions(
         id: dataEntity.fieldName,
         header: dataEntity.displayName,
         width: dataEntity.minWidth | 150,
-        minWidth:dataEntity.minWidth | 150,
+        minWidth: dataEntity.minWidth | 150,
         maxWidth: dataEntity.maxWidth | 200,
         cell: (item: any) => getDataToDisplay(item, dataEntity, pcfContext, primaryEntityName),
         sortingField: dataEntity.fieldName,
+        sortingComparator: (a: any, b: any) => {
+          if (dataEntity.metadata.type === "dateTime" || (dataEntity.metadata.type === "date")) {
+            return moment(a[dataEntity.fieldName]).isBefore(b[dataEntity.fieldName]) ? -1 : 1;
+          }
+
+          return a[dataEntity.fieldName]?.localeCompare(b[dataEntity.fieldName]);
+        },
       } as TableProps.ColumnDefinition<DataEntity>;
     });
 
