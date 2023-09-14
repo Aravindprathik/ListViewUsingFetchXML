@@ -77,14 +77,14 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
         // const recordIdLookupValue: ComponentFramework.EntityReference = this._context.parameters.RecordId.raw[0];
 
         // Other values if we need them
-        this._kpiEntityId = this._context.parameters.KPILookup.raw[0].id;
+        this._kpiEntityId = this._context.parameters.KPILookup.raw != undefined ? this._context.parameters.KPILookup.raw[0].id : null;
         console.log("KPIidInitView : ", this._kpiEntityId);
-        this._kpiEntityName = this._context.parameters.KPILookup.raw[0].entityType;
+        this._kpiEntityName = this._context.parameters.KPILookup.raw[0].entityType != undefined ? this._context.parameters.KPILookup.raw[0].entityType : null;
         console.log("kpiEntityId : ", this._kpiEntityId, " kpiEntityName : ", this._kpiEntityName);
         let entityId = (<any>this._context.mode).contextInfo.entityId;
         let entityTypeName = (<any>this._context.mode).contextInfo.entityTypeName;
         let entityDisplayName = (<any>this._context.mode).contextInfo.entityRecordName;
-        console.log("entityTypeName : ", entityTypeName, " entityDisplayName : ", entityDisplayName);
+        console.log("entityId : ",entityId,"entityTypeName : ", entityTypeName, " entityDisplayName : ", entityDisplayName);
         // This breaks when you use the PCF Test Harness.  Neat!
         try {
             this._baseEnvironmentUrl = (<any>this._context)?.page?.getClientUrl();
@@ -121,21 +121,20 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
      */
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
         // debugger;  // eslint-disable-line no-debugger
-
-        let props : KPIDataLoaderProps = {
-            kpiEntityId :this._kpiEntityId != null ?this._kpiEntityId.toString() :this._context.parameters.KPILookup.raw[0].id.toString(),
-            kpiEntityName : this._kpiEntityName,
+        let props: KPIDataLoaderProps = {
+            kpiEntityId: this._kpiEntityId != null ? this._kpiEntityId.toString() : this._context.parameters.KPILookup.raw[0].id.toString(),
+            kpiEntityName: this._kpiEntityName != null ? this._kpiEntityName : this._context.parameters.KPILookup.raw[0].entityType ,
             pcfContext: this._context,
-            itemsPerPage : this._itemsPerPage || 10
+            itemsPerPage: this._itemsPerPage || 10
         }
-        console.log("KPIidUpdateView : ",this._context.parameters.KPILookup.raw.toString());
+        console.log("KPIidUpdateView : ", this._context.parameters.KPILookup.raw.toString());
         return React.createElement(KPIDataLoader, props);
 
         // The below code is to make this code to run in local.
         // const columnDefinitions = generateColumnDefinitions(column_Mock, " ", "");
         // const props: CloudscapeGenericTableProps = { tableColumnDefinitions: columnDefinitions, allColumns: column_Mock, allItems: RowData, itemsPerPage: 20 };
         // return React.createElement(CloudscapeGenericTable, props);
-        
+
     }
 
     /**
@@ -143,6 +142,7 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
      * @returns an object based on nomenclature defined in manifest, expecting object[s] for property marked as “bound” or “output”
      */
     public getOutputs(): IOutputs {
+        console.log("getOutput Called")
         return {};
     }
 

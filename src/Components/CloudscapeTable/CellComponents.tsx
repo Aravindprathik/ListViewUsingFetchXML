@@ -32,7 +32,7 @@ export const getDataToDisplay = (
     case "externalLink":
       if (data) {
         return (
-          <Link external href={dataEntity.metadata.link || ""}>
+          <Link external href={dataEntity.metadata.link + data|| ""}>
             {data || 'external link'}
           </Link>
         );
