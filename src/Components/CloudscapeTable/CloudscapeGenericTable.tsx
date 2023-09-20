@@ -65,7 +65,7 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
         sortingColumn: {
           sortingField: allColumns?.columnInfo?.sortingColumn,
         },
-        isDescending: !allColumns?.columnInfo?.isAscending,
+        isDescending: !allColumns?.columnInfo?.isAscending || false,
       },
     },
   });

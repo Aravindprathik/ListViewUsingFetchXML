@@ -6,6 +6,7 @@ import { generateColumnDefinitions } from "./Components/CloudscapeTable/Cloudsca
 import { column_Mock } from "./MockData/AllColumns";
 import { CloudscapeGenericTable, CloudscapeGenericTableProps } from "./Components/CloudscapeTable/CloudscapeGenericTable";
 import { RowData } from "./MockData/AllItems";
+import LoadingSpinner from "./Components/GenericComponents/LoadingSpinner";
 
 export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInputs, IOutputs> {
     private theComponent: ComponentFramework.ReactControl<IInputs, IOutputs>;
@@ -17,8 +18,8 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
     private _isDebugMode: boolean;
     private _baseEnvironmentUrl?: string;
     private _itemsPerPage: number | null;
-    private _kpiEntityId: string;
-    private _kpiEntityName: string;
+    private _kpiEntityId: string | null;
+    private _kpiEntityName: string | null;
     // private _totalNumberOfRecords: number;    
 
     /** General */
@@ -38,14 +39,27 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
      * @param notifyOutputChanged A callback method to alert the framework that the control has new outputs ready to be retrieved asynchronously.
      * @param state A piece of data that persists in one session for a single user. Can be set at any point in a controls life cycle by calling 'setControlState' in the Mode interface.
      */
-    public init(
+    public async init(
         context: ComponentFramework.Context<IInputs>,
         notifyOutputChanged: () => void,
         state: ComponentFramework.Dictionary,
-        container: HTMLDivElement
-    ): void {
+        container: HTMLDivElement,
+    ): Promise<void> {
+        await this.waitForKPILookup(context);
         this.notifyOutputChanged = notifyOutputChanged;
         this.initVars(context, notifyOutputChanged, container);
+
+    }
+
+    private async waitForKPILookup(context: ComponentFramework.Context<IInputs>): Promise<void> {
+        while (!context?.parameters?.KPILookup?.raw) {
+            // Wait for a short period (e.g., 100 milliseconds) before checking again.
+            await this.sleep(100);
+        }
+    }
+
+    private async sleep(ms: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     private initVars(context: ComponentFramework.Context<IInputs>, notifyOutputChanged: () => void, container: HTMLDivElement): void {
@@ -55,36 +69,22 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
         this._isDebugMode = false;
         this._itemsPerPage = 20;
 
-        /* if (this._context.parameters.DebugMode) {
-             this._isDebugMode = this._context.parameters.DebugMode.raw == "1";
-         }*/
-
-        // If you want this to break every time you set isDebugMode to true
-        //if (this._isDebugMode) { 
-        //    debugger;  // eslint-disable-line no-debugger        
-        //}
-
-        /*  if (this._context.parameters.ItemsPerPage) {
-             this._itemsPerPage = this._context.parameters.ItemsPerPage.raw;
-         }*/
-
-        // TODO: Validate the input parameters to make sure we get a friendly error instead of weird errors
-        /*  var fetchXML: string | null = this._context.parameters.FetchXml.raw;
-         var recordIdPlaceholder: string | null = this._context.parameters.RecordIdPlaceholder.raw; // ?? "";  */
-
-        // This is just the simple control where the subgrid will be placed on the form
-        var controlAnchorField: string | null = this._context.parameters.ControlAnchorField.raw;
-        // const recordIdLookupValue: ComponentFramework.EntityReference = this._context.parameters.RecordId.raw[0];
-
         // Other values if we need them
-        this._kpiEntityId = this._context.parameters.KPILookup.raw != undefined ? this._context.parameters.KPILookup.raw[0].id : null;
-        console.log("KPIidInitView : ", this._kpiEntityId);
-        this._kpiEntityName = this._context.parameters.KPILookup.raw[0].entityType != undefined ? this._context.parameters.KPILookup.raw[0].entityType : null;
-        console.log("kpiEntityId : ", this._kpiEntityId, " kpiEntityName : ", this._kpiEntityName);
+        const lookupValue: ComponentFramework.LookupValue = context.parameters.KPILookup.raw[0];
+        //Xrm.Page.getAttribute
+
+        var kpiEntityId: string | null = lookupValue.id;
+        console.log("KPIidInitView : ", kpiEntityId);
+        this._kpiEntityId = kpiEntityId;
+        var kpiEntityName: string | null = lookupValue.entityType;
+        console.log("KPIidInitView : ", kpiEntityName);
+        this._kpiEntityName = kpiEntityName;
+
         let entityId = (<any>this._context.mode).contextInfo.entityId;
         let entityTypeName = (<any>this._context.mode).contextInfo.entityTypeName;
         let entityDisplayName = (<any>this._context.mode).contextInfo.entityRecordName;
-        console.log("entityId : ",entityId,"entityTypeName : ", entityTypeName, " entityDisplayName : ", entityDisplayName);
+        console.log("entityId : ", entityId, "entityTypeName : ", entityTypeName, " entityDisplayName : ", entityDisplayName);
+
         // This breaks when you use the PCF Test Harness.  Neat!
         try {
             this._baseEnvironmentUrl = (<any>this._context)?.page?.getClientUrl();
@@ -93,48 +93,29 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
         catch (ex) {
             this._baseEnvironmentUrl = "https://localhost";
         }
-        var recordId: string = entityId; //this._context.parameters.RecordId.raw ?? currentRecordId;
-
-
     }
 
-
-    // Replace ALL occurrences of a string
-    private replaceAll(source: string, find: string, replace: string): string {
-        // eslint-disable-next-line no-useless-escape
-        return source.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
-    }
-
-    private getPrimaryEntityNameFromFetchXml(fetchXml: string): string {
-        let primaryEntityName: string = "";
-        // @ts-ignore
-        let filter = fetchXml.matchAll(/<entity name='(.*?)'>/g).next();
-        if (filter && filter.value && filter.value[1]) {
-            primaryEntityName = filter.value[1];
-        }
-        return primaryEntityName;
-    }
     /**
      * Called when any value in the property bag has changed. This includes field values, data-sets, global values such as container height and width, offline status, control metadata values such as label, visible, etc.
      * @param context The entire property bag available to control via Context Object; It contains values as set up by the customizer mapped to names defined in the manifest, as well as utility functions
      * @returns ReactElement root react element for the control
      */
-    public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
-        // debugger;  // eslint-disable-line no-debugger
-        let props: KPIDataLoaderProps = {
-            kpiEntityId: this._kpiEntityId != null ? this._kpiEntityId.toString() : this._context.parameters.KPILookup.raw[0].id.toString(),
-            kpiEntityName: this._kpiEntityName != null ? this._kpiEntityName : this._context.parameters.KPILookup.raw[0].entityType ,
-            pcfContext: this._context,
-            itemsPerPage: this._itemsPerPage || 10
+    public updateView(): React.ReactElement {
+        if (this._kpiEntityId) {
+            console.log("Inside KPI Contains Data - KPIID UpdateView",this._kpiEntityId);
+            let props: KPIDataLoaderProps = {
+                kpiEntityId: this._kpiEntityId,
+                kpiEntityName: this._kpiEntityName,
+                pcfContext: this._context,
+                itemsPerPage: this._itemsPerPage || 10
+            }
+            console.log("KPI Lookup : ", this._context.parameters.KPILookup.raw.toString());
+            return React.createElement(KPIDataLoader, props);
         }
-        console.log("KPIidUpdateView : ", this._context.parameters.KPILookup.raw.toString());
-        return React.createElement(KPIDataLoader, props);
-
-        // The below code is to make this code to run in local.
-        // const columnDefinitions = generateColumnDefinitions(column_Mock, " ", "");
-        // const props: CloudscapeGenericTableProps = { tableColumnDefinitions: columnDefinitions, allColumns: column_Mock, allItems: RowData, itemsPerPage: 20 };
-        // return React.createElement(CloudscapeGenericTable, props);
-
+        else {
+            console.log("_kpiEntityId doesnot contains ...");
+            return React.createElement(LoadingSpinner);
+        }
     }
 
     /**
@@ -142,7 +123,6 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
      * @returns an object based on nomenclature defined in manifest, expecting object[s] for property marked as “bound” or “output”
      */
     public getOutputs(): IOutputs {
-        console.log("getOutput Called")
         return {};
     }
 

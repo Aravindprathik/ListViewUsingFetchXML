@@ -13,8 +13,8 @@ import {
 } from "./CloudscapeTableConfig";
 
 export interface KPIDataLoaderProps {
-  kpiEntityId: string;
-  kpiEntityName: string;
+  kpiEntityId: string | null;
+  kpiEntityName: string | null;
   pcfContext: ComponentFramework.Context<IInputs>;
   itemsPerPage: number;
 }
@@ -60,7 +60,7 @@ export const KPIDataLoader: React.FC<KPIDataLoaderProps> = ({ kpiEntityId, kpiEn
           "    <order attribute='cb_name' descending='false'/>",
           "    <filter type='and'>",
           "      <condition attribute='cb_kpimasterdataid' operator='eq' value='",
-          kpiEntityId /*{2ED4C990-9C42-EE11-BDF4-0022482A939E}*/,
+          kpiEntityId,
           "'/>",
           "    </filter>",
           "  </entity>",
