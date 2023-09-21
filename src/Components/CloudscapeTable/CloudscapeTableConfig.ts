@@ -49,34 +49,6 @@ export function generateVisibleContentOptions(
   return [];
 }
 
-export function generateFilteringProperties(dynamicColumnDetails: DynamicColumnDetails): FilteringProperty[] {
-  const filteringProperties: FilteringProperty[] = dynamicColumnDetails.data
-    .filter((items: DataEntity) => items.isFilterable)
-    .map((dataEntity: DataEntity) => {
-      const dataType: ColumnDataType = dataEntity.metadata.type;
-      let operators: string[] = [];
-
-      if (dataType === "string") {
-        operators = [":", "!:", "=", "!="];
-      } else if (dataType === "number") {
-        operators = ["=", "!=", "<", "<=", ">", ">="];
-      } else if (dataType === "date" || dataType === "dateTime") {
-        operators = ["=", "!=", "<", "<=", ">", ">="];
-      } else {
-        operators = [":", "!:", "=", "!="];
-      }
-
-      return {
-        key: dataEntity.fieldName,
-        propertyLabel: dataEntity.displayName,
-        groupValuesLabel: `${dataEntity.displayName} values`,
-        operators,
-      } as FilteringProperty;
-    });
-
-  return filteringProperties;
-}
-
 export function generateColumnDefinitions(
   dynamicColumnDetails: DynamicColumnDetails,
   pcfContext: ComponentFramework.Context<IInputs>,

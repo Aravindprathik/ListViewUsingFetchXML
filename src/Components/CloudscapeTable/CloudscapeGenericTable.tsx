@@ -1,9 +1,10 @@
 import { useCollection } from "@cloudscape-design/collection-hooks";
-import { CollectionPreferencesProps, Header, Pagination, PropertyFilter, PropertyFilterProps, Table, TableProps } from "@cloudscape-design/components";
+import { Calendar, CollectionPreferencesProps, DateInput, FormField, Header, Pagination, PropertyFilter, PropertyFilterProps, Table, TableProps } from "@cloudscape-design/components";
 import * as React from "react";
 import { Preferences, TableEmptyState, TableNoMatchState, getMatchesCountText, paginationAriaLabels, propertyFilterI18nStrings } from "../GenericComponents/Utils";
-import { DynamicColumnDetails } from "./CloudscapeInterface";
-import { BLANK_SEARCH_AND, extractFieldNamesForDefaultVisibleContent, generateFilteringProperties, generateVisibleContentOptions } from "./CloudscapeTableConfig";
+import { ColumnDataType, DataEntity, DynamicColumnDetails } from "./CloudscapeInterface";
+import { BLANK_SEARCH_AND, extractFieldNamesForDefaultVisibleContent, generateVisibleContentOptions } from "./CloudscapeTableConfig";
+import moment from "moment-timezone";
 
 export interface CloudscapeGenericTableProps {
   tableColumnDefinitions: TableProps.ColumnDefinition<any>[];
@@ -42,7 +43,6 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
       setTableDefaultPreferences(defaultPreferences);
     }
   }, [allColumns, itemsPerPage]);
-
   // generating filtering properties from allColumns
   React.useEffect(() => {
     if (allColumns) {
@@ -50,7 +50,6 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
       setFilteringProperties(properties);
     }
   }, [allColumns]);
-
   const { items, actions, filteredItemsCount, collectionProps, paginationProps, propertyFilterProps } = useCollection(tableRowData, {
     propertyFiltering: {
       filteringProperties,
@@ -64,8 +63,15 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
       defaultState: {
         sortingColumn: {
           sortingField: allColumns?.columnInfo?.sortingColumn,
+          sortingComparator: (a: any, b: any) => {
+            if (allColumns?.columnInfo?.sortingColumnDataType === "date" || allColumns?.columnInfo?.sortingColumnDataType === "dateTime") {
+              return moment(a[allColumns?.columnInfo?.sortingColumn]).isBefore(b[allColumns?.columnInfo?.sortingColumn]) ? -1 : 1;
+            } else {
+              return a[allColumns?.columnInfo?.sortingColumn].localeCompare(b[allColumns?.columnInfo?.sortingColumn]);
+            }
+          },
         },
-        isDescending: !allColumns?.columnInfo?.isAscending || false,
+        isDescending: !allColumns?.columnInfo?.isAscending,
       },
     },
   });
@@ -104,3 +110,48 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
     </>
   );
 };
+
+export function generateFilteringProperties(dynamicColumnDetails: DynamicColumnDetails): any[] {
+  const filteringProperties: any[] = dynamicColumnDetails.data
+    .filter((items: DataEntity) => items.isFilterable)
+    .map((dataEntity: DataEntity) => {
+      const dataType: ColumnDataType = dataEntity.metadata.type;
+      let operators: any[] = [];
+
+      if (dataType === "string") {
+        operators = [":", "!:", "=", "!="];
+      } else if (dataType === "number") {
+        operators = ["=", "!=", "<", "<=", ">", ">="];
+      } else if (dataType === "date" || dataType === "dateTime") {
+        operators = ["=", "!=", "<", "<=", ">", ">="].map((operator) => ({
+          operator: operator as PropertyFilterProps.ComparisonOperator,
+          form: ({ value, onChange }: any) => (
+            <div className="date-form">
+              <FormField>
+                <DateInput value={value ?? ""} onChange={(event) => onChange(event.detail.value)} placeholder="YYYY/MM/DD" />
+              </FormField>
+              <Calendar
+                value={value ?? ""}
+                onChange={(event) => onChange(event.detail.value)}
+                locale="en-US"
+                todayAriaLabel="Today"
+                nextMonthAriaLabel="Next month"
+                previousMonthAriaLabel="Previous month"
+              />
+            </div>
+          ),
+        }));
+      } else {
+        operators = [":", "!:", "=", "!="];
+      }
+
+      return {
+        key: dataEntity.fieldName,
+        propertyLabel: dataEntity.displayName,
+        groupValuesLabel: `${dataEntity.displayName} values`,
+        operators,
+      } as any;
+    });
+
+  return filteringProperties;
+}

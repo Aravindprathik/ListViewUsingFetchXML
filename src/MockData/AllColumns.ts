@@ -5,6 +5,7 @@ export const column_Mock: DynamicColumnDetails =
   "columnInfo": {
     "tableName": "Opportunities in Appointment Set",
     "sortingColumn": "modifiedon@OData.Community.Display.V1.FormattedValue",
+    "sortingColumnDataType":"date",
     "isAscending": false
   },
   "data": [
