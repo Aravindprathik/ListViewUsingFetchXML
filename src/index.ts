@@ -105,7 +105,6 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
             console.log("Inside KPI Contains Data - KPIID UpdateView",this._kpiEntityId);
             let props: KPIDataLoaderProps = {
                 kpiEntityId: this._kpiEntityId,
-                kpiEntityName: this._kpiEntityName,
                 pcfContext: this._context,
                 itemsPerPage: this._itemsPerPage || 10
             }

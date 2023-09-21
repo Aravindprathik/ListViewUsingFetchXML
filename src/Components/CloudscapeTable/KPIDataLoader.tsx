@@ -1,40 +1,22 @@
-import { TableProps } from "@cloudscape-design/components";
-import  moment from "moment-timezone";
 import * as React from "react";
 import { useEffect } from "react";
 import { IInputs } from "../../generated/ManifestTypes";
 import ErrorContainer from "../GenericComponents/ErrorContainer";
 import LoadingSpinner from "../GenericComponents/LoadingSpinner";
-import { DefaultDateFormat, DefaultDateTimeFormat } from "./CellComponents";
 import { CloudscapeGenericTable } from "./CloudscapeGenericTable";
 import { DynamicColumnDetails } from "./CloudscapeInterface";
-import {
-  generateColumnDefinitions
-} from "./CloudscapeTableConfig";
 
 export interface KPIDataLoaderProps {
   kpiEntityId: string | null;
-  kpiEntityName: string | null;
   pcfContext: ComponentFramework.Context<IInputs>;
   itemsPerPage: number;
 }
-export const KPIDataLoader: React.FC<KPIDataLoaderProps> = ({ kpiEntityId, kpiEntityName, pcfContext, itemsPerPage }) => {
+export const KPIDataLoader: React.FC<KPIDataLoaderProps> = ({ kpiEntityId, pcfContext, itemsPerPage }) => {
   const [dataLoadingStatus, setDataLoadingStatus] = React.useState<"loading" | "error" | "success">("loading");
 
   const [primaryEntity, setPrimaryEntityName] = React.useState("");
   const [allColumns, setAllColumns] = React.useState<DynamicColumnDetails | undefined>();
   const [allItems, setAllItems] = React.useState<any | undefined>();
-
-  const [tableColumnDefinitions, setTableColumnDefinitions] = React.useState<TableProps.ColumnDefinition<any>[]>([]);
-
-  // generating Table column definitions from allColumns
-  useEffect(() => {
-    if (allColumns) {
-      const columnDefinitions = generateColumnDefinitions(allColumns, pcfContext, primaryEntity);
-      console.log("columnDefinitions ", columnDefinitions);
-      setTableColumnDefinitions(columnDefinitions);
-    }
-  }, [allColumns, pcfContext, primaryEntity]);
 
   useEffect(() => {
     dynamicsHandler();
@@ -49,7 +31,6 @@ export const KPIDataLoader: React.FC<KPIDataLoaderProps> = ({ kpiEntityId, kpiEn
         var fetchData = {
           cb_kpimasterdataid: kpiEntityId,
         };
-        // console.log("fetchData.cb_kpimasterdataid", fetchData.cb_kpimasterdataid);
         var fetchXml = [
           "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>",
           "  <entity name='cb_kpimasterdata'>",
@@ -76,18 +57,17 @@ export const KPIDataLoader: React.FC<KPIDataLoaderProps> = ({ kpiEntityId, kpiEn
               let _finalColumnLayout = _columnlayout != null ? JSON.parse(_columnlayout) : null;
               let fetchXML_AllItems = cb_fetchxml.replace(/"/g, "'");
               const _primaryEntityName = getPrimaryEntityNameFromFetchXml(fetchXML_AllItems);
-
               setPrimaryEntityName(_primaryEntityName);
-              console.log("_finalColumnLayout ", JSON.stringify(_finalColumnLayout));
+              
+              console.log("KPI All Columns ", JSON.stringify(_finalColumnLayout));
               setAllColumns(_finalColumnLayout);
 
               pcfContext.webAPI.retrieveMultipleRecords(_primaryEntityName, "?fetchXml=" + encodeURIComponent(fetchXML_AllItems)).then(
                 (results: any) => {
                   if (results && results.entities && results.entities.length > 0) {
                     const rawItemData = results.entities;
-                    const parsedData = modifyRowData(rawItemData, _finalColumnLayout);
-                    console.log("modifyRowData ", JSON.stringify(parsedData));
-                    setAllItems(parsedData);
+                    console.log('KPI All Items ', JSON.stringify(rawItemData));
+                    setAllItems(rawItemData);
                   }
 
                   setDataLoadingStatus("success");
@@ -122,40 +102,18 @@ export const KPIDataLoader: React.FC<KPIDataLoaderProps> = ({ kpiEntityId, kpiEn
     return primaryEntityName;
   };
 
-  function modifyRowData(rowData: any[], allColumns: DynamicColumnDetails): any[] {
-    const modifiedData = rowData.map((row) => {
-      const modifiedRow = { ...row };
-
-      allColumns.data.forEach((dataEntity) => {
-        if (dataEntity.fieldName in row) {
-          let originalData = row[dataEntity.fieldName];
-
-          if (dataEntity.metadata.type === "date") {
-            modifiedRow[dataEntity.fieldName] = moment(originalData).format(dataEntity.metadata.dateFormat || DefaultDateFormat);
-          }
-
-          if (dataEntity.metadata.type === "dateTime") {
-            modifiedRow[dataEntity.fieldName] = moment(originalData).format(dataEntity.metadata.dateFormat || DefaultDateTimeFormat);
-          }
-
-          if (dataEntity.metadata.type === "boolean") {
-            modifiedRow[dataEntity.fieldName] = originalData ? "Yes" : "No";
-          }
-        }
-      });
-
-      return modifiedRow;
-    });
-
-    return modifiedData;
-  }
-
   return (
     <>
       {dataLoadingStatus === "loading" && <LoadingSpinner />}
       {dataLoadingStatus === "error" && <ErrorContainer />}
       {allColumns && dataLoadingStatus === "success" && (
-        <CloudscapeGenericTable tableColumnDefinitions={tableColumnDefinitions} allColumns={allColumns} allItems={allItems || []} itemsPerPage={itemsPerPage} />
+        <CloudscapeGenericTable
+          primaryEntity={primaryEntity}
+          pcfContext={pcfContext}
+          allColumns={allColumns}
+          allItems={allItems || []}
+          itemsPerPage={itemsPerPage} 
+        />
       )}
     </>
   );
