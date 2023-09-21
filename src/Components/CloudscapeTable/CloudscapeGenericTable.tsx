@@ -138,25 +138,10 @@ export function generateFilteringProperties(dynamicColumnDetails: DynamicColumnD
         operators = [":", "!:", "=", "!="];
       } else if (dataType === "number") {
         operators = ["=", "!=", "<", "<=", ">", ">="];
-      } else if (dataType === "date" || dataType === "dateTime") {
-        operators = ["=", "!=", "<", "<=", ">", ">="].map((operator) => ({
-          operator: operator as PropertyFilterProps.ComparisonOperator,
-          form: ({ value, onChange }: any) => (
-            <div className="date-form">
-              <FormField>
-                <DateInput value={value ?? ""} onChange={(event) => onChange(event.detail.value)} placeholder="YYYY/MM/DD" />
-              </FormField>
-              <Calendar
-                value={value ?? ""}
-                onChange={(event) => onChange(event.detail.value)}
-                locale="en-US"
-                todayAriaLabel="Today"
-                nextMonthAriaLabel="Next month"
-                previousMonthAriaLabel="Previous month"
-              />
-            </div>
-          ),
-        }));
+      } else if (dataType === "date") {
+        operators = [":", "!:", "=", "!="];
+      } else if(dataType === "dateTime") {
+        operators = [":", "!:", "=", "!="];
       } else {
         operators = [":", "!:", "=", "!="];
       }
