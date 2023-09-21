@@ -1,9 +1,9 @@
 import { useCollection } from "@cloudscape-design/collection-hooks";
 import { Calendar, CollectionPreferencesProps, DateInput, FormField, Header, Pagination, PropertyFilter, PropertyFilterProps, Table, TableProps } from "@cloudscape-design/components";
 import * as React from "react";
-import { Preferences, TableEmptyState, TableNoMatchState, getMatchesCountText, modifyRowData, paginationAriaLabels, propertyFilterI18nStrings } from "../GenericComponents/Utils";
+import { Preferences, TableEmptyState, TableNoMatchState, getMatchesCountText, paginationAriaLabels, propertyFilterI18nStrings } from "../GenericComponents/Utils";
 import { ColumnDataType, DataEntity, DynamicColumnDetails } from "./CloudscapeInterface";
-import { BLANK_SEARCH_AND, extractFieldNamesForDefaultVisibleContent, generateColumnDefinitions, generateVisibleContentOptions } from "./CloudscapeTableConfig";
+import { BLANK_SEARCH_AND, extractFieldNamesForDefaultVisibleContent, generateColumnDefinitions, generateVisibleContentOptions, modifyRowData } from "./CloudscapeTableConfig";
 import moment from "moment-timezone";
 import { IInputs } from "../../generated/ManifestTypes";
 
