@@ -1,5 +1,36 @@
 import { Box, Checkbox, CollectionPreferences, PropertyFilterProps, SpaceBetween } from "@cloudscape-design/components";
 import * as React from "react";
+import { DynamicColumnDetails } from "../CloudscapeTable/CloudscapeInterface";
+import moment from "moment-timezone";
+import { DefaultDateFormat, DefaultDateTimeFormat } from "../CloudscapeTable/CellComponents";
+
+export const modifyRowData = (rowData: any[], allColumns: DynamicColumnDetails): any[] => {
+  const modifiedData = rowData.map((row) => {
+    const modifiedRow = { ...row };
+
+    allColumns.data.forEach((dataEntity) => {
+      if (dataEntity.fieldName in row) {
+        let originalData = row[dataEntity.fieldName];
+
+        if (dataEntity.metadata.type === "date") {
+          modifiedRow[dataEntity.fieldName] = moment(originalData).format(dataEntity.metadata.dateFormat || DefaultDateFormat);
+        }
+
+        if (dataEntity.metadata.type === "dateTime") {
+          modifiedRow[dataEntity.fieldName] = moment(originalData).format(dataEntity.metadata.dateFormat || DefaultDateTimeFormat);
+        }
+
+        if (dataEntity.metadata.type === "boolean") {
+          modifiedRow[dataEntity.fieldName] = originalData ? "Yes" : "No";
+        }
+      }
+    });
+
+    return modifiedRow;
+  });
+
+  return modifiedData;
+}
 
 export const TableNoMatchState: React.FC = () => {
   return (

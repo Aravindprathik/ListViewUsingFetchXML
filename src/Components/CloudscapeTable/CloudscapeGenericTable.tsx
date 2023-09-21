@@ -1,20 +1,23 @@
 import { useCollection } from "@cloudscape-design/collection-hooks";
 import { Calendar, CollectionPreferencesProps, DateInput, FormField, Header, Pagination, PropertyFilter, PropertyFilterProps, Table, TableProps } from "@cloudscape-design/components";
 import * as React from "react";
-import { Preferences, TableEmptyState, TableNoMatchState, getMatchesCountText, paginationAriaLabels, propertyFilterI18nStrings } from "../GenericComponents/Utils";
+import { Preferences, TableEmptyState, TableNoMatchState, getMatchesCountText, modifyRowData, paginationAriaLabels, propertyFilterI18nStrings } from "../GenericComponents/Utils";
 import { ColumnDataType, DataEntity, DynamicColumnDetails } from "./CloudscapeInterface";
-import { BLANK_SEARCH_AND, extractFieldNamesForDefaultVisibleContent, generateVisibleContentOptions } from "./CloudscapeTableConfig";
+import { BLANK_SEARCH_AND, extractFieldNamesForDefaultVisibleContent, generateColumnDefinitions, generateVisibleContentOptions } from "./CloudscapeTableConfig";
 import moment from "moment-timezone";
+import { IInputs } from "../../generated/ManifestTypes";
 
 export interface CloudscapeGenericTableProps {
-  tableColumnDefinitions: TableProps.ColumnDefinition<any>[];
+  primaryEntity: string;
+  pcfContext: ComponentFramework.Context<IInputs>,
   allColumns: DynamicColumnDetails;
   allItems: any[];
   itemsPerPage: number;
 }
-export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ tableColumnDefinitions, allColumns, allItems, itemsPerPage }) => {
+export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ primaryEntity, pcfContext, allColumns, allItems, itemsPerPage }) => {
 
   const [tableRowData, setTableRowData] = React.useState<any[]>([]);
+  const [tableColumnDefinitions, setTableColumnDefinitions] = React.useState<TableProps.ColumnDefinition<any>[]>([]);
 
   const [tableDefaultPreferences, setTableDefaultPreferences] = React.useState<CollectionPreferencesProps.Preferences>({});
 
@@ -26,9 +29,18 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
+  // generating Table column definitions from allColumns
   React.useEffect(() => {
-    setTableRowData(allItems || []);
-  }, [allItems]);
+    if (allColumns && allItems) {
+      const columnDefinitions = generateColumnDefinitions(allColumns, pcfContext, primaryEntity);
+      console.log("Table Col Definitions ", columnDefinitions);
+      setTableColumnDefinitions(columnDefinitions);
+
+      const parsedData = modifyRowData(allItems, allColumns);
+      console.log("Table Row Definitions ", JSON.stringify(parsedData));
+      setTableRowData(parsedData || []);
+    }
+  }, [pcfContext, primaryEntity, allColumns, allItems]);
 
   // generating Table default preferences from allColumns
   React.useEffect(() => {
