@@ -2,11 +2,10 @@ import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import "@cloudscape-design/global-styles/index.css";
 import * as React from "react";
 import { KPIDataLoader, KPIDataLoaderProps } from "./Components/CloudscapeTable/KPIDataLoader";
-import { generateColumnDefinitions } from "./Components/CloudscapeTable/CloudscapeTableConfig";
-import { column_Mock } from "./MockData/AllColumns";
 import { CloudscapeGenericTable, CloudscapeGenericTableProps } from "./Components/CloudscapeTable/CloudscapeGenericTable";
-import { RowData } from "./MockData/AllItems";
 import LoadingSpinner from "./Components/GenericComponents/LoadingSpinner";
+import { MOCK_KPI_ALL_COLUMNS } from "./MockData/AllColumns";
+import { MOCK_KPI_ALL_ITEMS } from "./MockData/AllItems";
 
 export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInputs, IOutputs> {
     private theComponent: ComponentFramework.ReactControl<IInputs, IOutputs>;
@@ -63,36 +62,37 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
     }
 
     private initVars(context: ComponentFramework.Context<IInputs>, notifyOutputChanged: () => void, container: HTMLDivElement): void {
-        this._context = context;
-        this._notifyOutputChanged = notifyOutputChanged;
-        this._container = container;
-        this._isDebugMode = false;
-        this._itemsPerPage = 20;
+        // TODO - Uncomment this before deploying
+        // this._context = context;
+        // this._notifyOutputChanged = notifyOutputChanged;
+        // this._container = container;
+        // this._isDebugMode = false;
+        // this._itemsPerPage = 20;
 
-        // Other values if we need them
-        const lookupValue: ComponentFramework.LookupValue = context.parameters.KPILookup.raw[0];
-        //Xrm.Page.getAttribute
+        // // Other values if we need them
+        // const lookupValue: ComponentFramework.LookupValue = context.parameters.KPILookup.raw[0];
+        // //Xrm.Page.getAttribute
 
-        var kpiEntityId: string | null = lookupValue.id;
-        console.log("KPIidInitView : ", kpiEntityId);
-        this._kpiEntityId = kpiEntityId;
-        var kpiEntityName: string | null = lookupValue.entityType;
-        console.log("KPIidInitView : ", kpiEntityName);
-        this._kpiEntityName = kpiEntityName;
+        // var kpiEntityId: string | null = lookupValue.id;
+        // console.log("KPIidInitView : ", kpiEntityId);
+        // this._kpiEntityId = kpiEntityId;
+        // var kpiEntityName: string | null = lookupValue.entityType;
+        // console.log("KPIidInitView : ", kpiEntityName);
+        // this._kpiEntityName = kpiEntityName;
 
-        let entityId = (<any>this._context.mode).contextInfo.entityId;
-        let entityTypeName = (<any>this._context.mode).contextInfo.entityTypeName;
-        let entityDisplayName = (<any>this._context.mode).contextInfo.entityRecordName;
-        console.log("entityId : ", entityId, "entityTypeName : ", entityTypeName, " entityDisplayName : ", entityDisplayName);
+        // let entityId = (<any>this._context.mode).contextInfo.entityId;
+        // let entityTypeName = (<any>this._context.mode).contextInfo.entityTypeName;
+        // let entityDisplayName = (<any>this._context.mode).contextInfo.entityRecordName;
+        // console.log("entityId : ", entityId, "entityTypeName : ", entityTypeName, " entityDisplayName : ", entityDisplayName);
 
-        // This breaks when you use the PCF Test Harness.  Neat!
-        try {
-            this._baseEnvironmentUrl = (<any>this._context)?.page?.getClientUrl();
-            console.log("_baseEnvironmentUrl : ", this._baseEnvironmentUrl, " entityDisplayName : ", entityDisplayName);
-        }
-        catch (ex) {
-            this._baseEnvironmentUrl = "https://localhost";
-        }
+        // // This breaks when you use the PCF Test Harness.  Neat!
+        // try {
+        //     this._baseEnvironmentUrl = (<any>this._context)?.page?.getClientUrl();
+        //     console.log("_baseEnvironmentUrl : ", this._baseEnvironmentUrl, " entityDisplayName : ", entityDisplayName);
+        // }
+        // catch (ex) {
+        //     this._baseEnvironmentUrl = "https://localhost";
+        // }
     }
 
     /**
@@ -101,20 +101,32 @@ export class FetchXmlDetailsList implements ComponentFramework.ReactControl<IInp
      * @returns ReactElement root react element for the control
      */
     public updateView(): React.ReactElement {
-        if (this._kpiEntityId) {
-            console.log("Inside KPI Contains Data - KPIID UpdateView",this._kpiEntityId);
-            let props: KPIDataLoaderProps = {
-                kpiEntityId: this._kpiEntityId,
-                pcfContext: this._context,
-                itemsPerPage: this._itemsPerPage || 10
-            }
-            console.log("KPI Lookup : ", this._context.parameters.KPILookup.raw.toString());
-            return React.createElement(KPIDataLoader, props);
+        // TODO - Uncomment this before deploying
+        // if (this._kpiEntityId) {
+        //     console.log("Inside KPI Contains Data - KPIID UpdateView",this._kpiEntityId);
+        //     let props: KPIDataLoaderProps = {
+        //         kpiEntityId: this._kpiEntityId,
+        //         pcfContext: this._context,
+        //         itemsPerPage: this._itemsPerPage || 10
+        //     }
+        //     console.log("KPI Lookup : ", this._context.parameters.KPILookup.raw.toString());
+        //     return React.createElement(KPIDataLoader, props);
+        // }
+        // else {
+        //     console.log("_kpiEntityId doesnot contains ...");
+        //     return React.createElement(LoadingSpinner);
+        // }
+
+        // Dev only
+        // TODO - Comment this before deploying
+        let props: CloudscapeGenericTableProps = {
+            primaryEntity: 'primaryEntity',
+            pcfContext: null,
+            allColumns: MOCK_KPI_ALL_COLUMNS,
+            allItems: MOCK_KPI_ALL_ITEMS,
+            itemsPerPage: 50,
         }
-        else {
-            console.log("_kpiEntityId doesnot contains ...");
-            return React.createElement(LoadingSpinner);
-        }
+        return React.createElement(CloudscapeGenericTable, props);
     }
 
     /**

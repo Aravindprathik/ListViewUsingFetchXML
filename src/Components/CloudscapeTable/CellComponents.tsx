@@ -2,6 +2,7 @@ import * as React from "react";
 import { DataEntity } from "./CloudscapeInterface";
 import { Box, Link } from "@cloudscape-design/components";
 import  moment from "moment-timezone";
+import { IInputs } from "../../generated/ManifestTypes";
 
 export const DefaultDateFormat = "MM/DD/YYYY";
 export const DefaultDateTimeFormat = "MM/DD/YYYY hh:mm A";
@@ -11,7 +12,7 @@ export const DefaultDateTimeFormat = "MM/DD/YYYY hh:mm A";
 export const getDataToDisplay = (
   item: any,
   dataEntity: DataEntity,
-  pcfContext: any,
+  pcfContext: ComponentFramework.Context<IInputs> | null,
   primaryEntityName: string
 ) => {
   const dataType = dataEntity.metadata.type;
@@ -21,10 +22,14 @@ export const getDataToDisplay = (
     case "link":
       if (data) {
         const handleCLick = () => {
-          pcfContext.navigation.openForm({
-            entityName: primaryEntityName,
-            entityId: item[primaryEntityName + "id"],
-          });
+          if(pcfContext) {
+            pcfContext?.navigation.openForm({
+              entityName: primaryEntityName,
+              entityId: item[primaryEntityName + "id"],
+            });
+          } else {
+            console.error('pcfContext is null');
+          }
         };
         return <Link onFollow={() => handleCLick()}>{data}</Link>;
       }

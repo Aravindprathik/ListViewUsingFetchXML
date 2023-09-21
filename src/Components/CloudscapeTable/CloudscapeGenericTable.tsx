@@ -1,15 +1,15 @@
 import { useCollection } from "@cloudscape-design/collection-hooks";
 import { Calendar, CollectionPreferencesProps, DateInput, FormField, Header, Pagination, PropertyFilter, PropertyFilterProps, Table, TableProps } from "@cloudscape-design/components";
 import * as React from "react";
-import { Preferences, TableEmptyState, TableNoMatchState, getMatchesCountText, modifyRowData, paginationAriaLabels, propertyFilterI18nStrings } from "../GenericComponents/Utils";
+import { Preferences, TableEmptyState, TableNoMatchState, getMatchesCountText, paginationAriaLabels, propertyFilterI18nStrings } from "../GenericComponents/Utils";
 import { ColumnDataType, DataEntity, DynamicColumnDetails } from "./CloudscapeInterface";
-import { BLANK_SEARCH_AND, extractFieldNamesForDefaultVisibleContent, generateColumnDefinitions, generateVisibleContentOptions } from "./CloudscapeTableConfig";
+import { BLANK_SEARCH_AND, extractFieldNamesForDefaultVisibleContent, generateColumnDefinitions, generateVisibleContentOptions, modifyRowData } from "./CloudscapeTableConfig";
 import moment from "moment-timezone";
 import { IInputs } from "../../generated/ManifestTypes";
 
 export interface CloudscapeGenericTableProps {
   primaryEntity: string;
-  pcfContext: ComponentFramework.Context<IInputs>,
+  pcfContext: ComponentFramework.Context<IInputs> | null,
   allColumns: DynamicColumnDetails;
   allItems: any[];
   itemsPerPage: number;
@@ -25,13 +25,17 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
   const [query, setQuery] = React.useState(BLANK_SEARCH_AND);
 
   React.useEffect(() => {
+    console.log('Cloudscape Table');
+  }, []);
+
+  React.useEffect(() => {
     actions.setPropertyFiltering(query);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
   // generating Table column definitions from allColumns
   React.useEffect(() => {
-    if (allColumns && allItems) {
+    if (allColumns) {
       const columnDefinitions = generateColumnDefinitions(allColumns, pcfContext, primaryEntity);
       console.log("Table Col Definitions ", columnDefinitions);
       setTableColumnDefinitions(columnDefinitions);
@@ -134,25 +138,10 @@ export function generateFilteringProperties(dynamicColumnDetails: DynamicColumnD
         operators = [":", "!:", "=", "!="];
       } else if (dataType === "number") {
         operators = ["=", "!=", "<", "<=", ">", ">="];
-      } else if (dataType === "date" || dataType === "dateTime") {
-        operators = ["=", "!=", "<", "<=", ">", ">="].map((operator) => ({
-          operator: operator as PropertyFilterProps.ComparisonOperator,
-          form: ({ value, onChange }: any) => (
-            <div className="date-form">
-              <FormField>
-                <DateInput value={value ?? ""} onChange={(event) => onChange(event.detail.value)} placeholder="YYYY/MM/DD" />
-              </FormField>
-              <Calendar
-                value={value ?? ""}
-                onChange={(event) => onChange(event.detail.value)}
-                locale="en-US"
-                todayAriaLabel="Today"
-                nextMonthAriaLabel="Next month"
-                previousMonthAriaLabel="Previous month"
-              />
-            </div>
-          ),
-        }));
+      } else if (dataType === "date") {
+        operators = [":", "!:", "=", "!="];
+      } else if(dataType === "dateTime") {
+        operators = [":", "!:", "=", "!="];
       } else {
         operators = [":", "!:", "=", "!="];
       }
