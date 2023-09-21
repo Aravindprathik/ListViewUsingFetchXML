@@ -9,7 +9,7 @@ import { IInputs } from "../../generated/ManifestTypes";
 
 export interface CloudscapeGenericTableProps {
   primaryEntity: string;
-  pcfContext: ComponentFramework.Context<IInputs>,
+  pcfContext: ComponentFramework.Context<IInputs> | null,
   allColumns: DynamicColumnDetails;
   allItems: any[];
   itemsPerPage: number;
@@ -25,13 +25,17 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
   const [query, setQuery] = React.useState(BLANK_SEARCH_AND);
 
   React.useEffect(() => {
+    console.log('Cloudscape Table');
+  }, []);
+
+  React.useEffect(() => {
     actions.setPropertyFiltering(query);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
   // generating Table column definitions from allColumns
   React.useEffect(() => {
-    if (allColumns && allItems) {
+    if (allColumns) {
       const columnDefinitions = generateColumnDefinitions(allColumns, pcfContext, primaryEntity);
       console.log("Table Col Definitions ", columnDefinitions);
       setTableColumnDefinitions(columnDefinitions);

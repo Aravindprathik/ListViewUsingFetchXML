@@ -51,7 +51,7 @@ export function generateVisibleContentOptions(
 
 export function generateColumnDefinitions(
   dynamicColumnDetails: DynamicColumnDetails,
-  pcfContext: ComponentFramework.Context<IInputs>,
+  pcfContext: ComponentFramework.Context<IInputs> | null,
   primaryEntityName: string
 ): TableProps.ColumnDefinition<DataEntity>[] {
   const columnDefinitions: TableProps.ColumnDefinition<DataEntity>[] =
