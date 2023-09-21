@@ -51,7 +51,7 @@ export const MOCK_KPI_ALL_COLUMNS: DynamicColumnDetails = {
       isFilterable: true,
       minWidth: 170,
       maxWidth: 190,
-      metadata: { type: "date", dateFormat: "MM/DD/YYYY hh:mm A" },
+      metadata: { type: "dateTime", dateFormat: "MM/DD/YYYY hh:mm A" },
     },
     {
       fieldName: "_cb_casestatus_value@OData.Community.Display.V1.FormattedValue",

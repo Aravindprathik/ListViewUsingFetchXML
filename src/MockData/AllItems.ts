@@ -2,7 +2,7 @@
 export const MOCK_KPI_ALL_ITEMS: any[] = [
   {
     "@odata.etag": 'W/"93725241"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "5/19/2022 11:55 AM",
+    createdonDateTime: "5/19/2022 11:55 AM",
     createdon: "2022-05-19T15:55:44Z",
     modifiedonDateTime: "6/3/2022 1:59 AM",
     modifiedon: "2022-06-03T05:59:05Z",
@@ -15,7 +15,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
   },
   {
     "@odata.etag": 'W/"86306043"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "6/14/2022 4:23 AM",
+    createdonDateTime: "6/14/2022 4:23 AM",
     createdon: "2022-06-14T08:23:41Z",
     modifiedonDateTime: "6/14/2022 4:23 AM",
     modifiedon: "2022-06-14T08:23:57Z",
@@ -34,7 +34,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
   },
   {
     "@odata.etag": 'W/"86306224"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "6/14/2022 4:24 AM",
+    createdonDateTime: "6/14/2022 4:24 AM",
     createdon: "2022-06-14T08:24:52Z",
     modifiedonDateTime: "6/14/2022 4:25 AM",
     modifiedon: "2022-06-14T08:25:03Z",
@@ -53,7 +53,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
   },
   {
     "@odata.etag": 'W/"86306428"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "6/14/2022 4:26 AM",
+    createdonDateTime: "6/14/2022 4:26 AM",
     createdon: "2022-06-14T08:26:18Z",
     modifiedonDateTime: "6/14/2022 4:26 AM",
     modifiedon: "2022-06-14T08:26:28Z",
@@ -72,7 +72,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
   },
   {
     "@odata.etag": 'W/"86306588"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "6/14/2022 4:27 AM",
+    createdonDateTime: "6/14/2022 4:27 AM",
     createdon: "2022-06-14T08:27:16Z",
     modifiedonDateTime: "6/14/2022 4:27 AM",
     modifiedon: "2022-06-14T08:27:32Z",
@@ -91,7 +91,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
   },
   {
     "@odata.etag": 'W/"86386760"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "6/16/2022 4:48 AM",
+    createdonDateTime: "6/16/2022 4:48 AM",
     createdon: "2022-06-16T08:48:08Z",
     modifiedonDateTime: "6/16/2022 4:48 AM",
     modifiedon: "2022-06-16T08:48:39Z",
@@ -104,7 +104,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
   },
   {
     "@odata.etag": 'W/"86387002"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "6/16/2022 4:53 AM",
+    createdonDateTime: "6/16/2022 4:53 AM",
     createdon: "2022-06-16T08:53:10Z",
     modifiedonDateTime: "6/16/2022 4:53 AM",
     modifiedon: "2022-06-16T08:53:29Z",
@@ -123,7 +123,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
   },
   {
     "@odata.etag": 'W/"86387155"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "6/16/2022 4:54 AM",
+    createdonDateTime: "6/16/2022 4:54 AM",
     createdon: "2022-06-16T08:54:03Z",
     modifiedonDateTime: "6/16/2022 4:54 AM",
     modifiedon: "2022-06-16T08:54:19Z",
@@ -142,7 +142,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
   },
   {
     "@odata.etag": 'W/"86391129"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "6/16/2022 5:53 AM",
+    createdonDateTime: "6/16/2022 5:53 AM",
     createdon: "2022-06-16T09:53:15Z",
     modifiedonDateTime: "6/16/2022 5:53 AM",
     modifiedon: "2022-06-16T09:53:42Z",
@@ -161,7 +161,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
   },
   {
     "@odata.etag": 'W/"86391309"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "6/16/2022 5:54 AM",
+    createdonDateTime: "6/16/2022 5:54 AM",
     createdon: "2022-06-16T09:54:53Z",
     modifiedonDateTime: "6/16/2022 5:55 AM",
     modifiedon: "2022-06-16T09:55:09Z",
@@ -180,7 +180,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
   },
   {
     "@odata.etag": 'W/"87383964"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "6/28/2022 4:17 PM",
+    createdonDateTime: "6/28/2022 4:17 PM",
     createdon: "2022-06-28T20:17:05Z",
     modifiedonDateTime: "6/28/2022 4:17 PM",
     modifiedon: "2022-06-28T20:17:25Z",
@@ -199,7 +199,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
   },
   {
     "@odata.etag": 'W/"87384395"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "6/28/2022 4:23 PM",
+    createdonDateTime: "6/28/2022 4:23 PM",
     createdon: "2022-06-28T20:23:04Z",
     modifiedonDateTime: "6/28/2022 4:23 PM",
     modifiedon: "2022-06-28T20:23:26Z",
@@ -218,7 +218,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
   },
   {
     "@odata.etag": 'W/"87384841"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "6/28/2022 4:28 PM",
+    createdonDateTime: "6/28/2022 4:28 PM",
     createdon: "2022-06-28T20:28:01Z",
     modifiedonDateTime: "6/28/2022 4:28 PM",
     modifiedon: "2022-06-28T20:28:34Z",
@@ -237,7 +237,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
   },
   {
     "@odata.etag": 'W/"87387695"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "6/28/2022 5:38 PM",
+    createdonDateTime: "6/28/2022 5:38 PM",
     createdon: "2022-06-28T21:38:14Z",
     modifiedonDateTime: "6/28/2022 5:38 PM",
     modifiedon: "2022-06-28T21:38:40Z",
@@ -256,7 +256,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
   },
   {
     "@odata.etag": 'W/"111778023"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "3/2/2023 10:46 AM",
+    createdonDateTime: "3/2/2023 10:46 AM",
     createdon: "2023-03-02T15:46:36Z",
     modifiedonDateTime: "3/2/2023 10:46 AM",
     modifiedon: "2023-03-02T15:46:40Z",
@@ -275,7 +275,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
   },
   {
     "@odata.etag": 'W/"120324326"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "6/23/2022 12:45 AM",
+    createdonDateTime: "6/23/2022 12:45 AM",
     createdon: "2022-06-23T04:45:12Z",
     modifiedonDateTime: "5/10/2023 6:55 AM",
     modifiedon: "2023-05-10T10:55:25Z",
@@ -291,7 +291,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
   },
   {
     "@odata.etag": 'W/"120326888"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "6/10/2022 12:57 AM",
+    createdonDateTime: "6/10/2022 12:57 AM",
     createdon: "2022-06-10T04:57:28Z",
     modifiedonDateTime: "5/10/2023 7:12 AM",
     modifiedon: "2023-05-10T11:12:25Z",
@@ -313,7 +313,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
   },
   {
     "@odata.etag": 'W/"120327027"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "6/11/2022 2:11 PM",
+    createdonDateTime: "6/11/2022 2:11 PM",
     createdon: "2022-06-11T18:11:20Z",
     modifiedonDateTime: "5/10/2023 7:14 AM",
     modifiedon: "2023-05-10T11:14:30Z",
@@ -335,7 +335,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
   },
   {
     "@odata.etag": 'W/"120327052"',
-    "createdon@OData.Community.Display.V1.FormattedValue": "6/11/2022 2:49 PM",
+    createdonDateTime: "6/11/2022 2:49 PM",
     createdon: "2022-06-11T18:49:48Z",
     modifiedonDateTime: "5/10/2023 7:14 AM",
     modifiedon: "2023-05-10T11:14:49Z",

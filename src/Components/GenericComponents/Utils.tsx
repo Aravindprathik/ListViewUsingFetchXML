@@ -13,11 +13,21 @@ export const modifyRowData = (rowData: any[], allColumns: DynamicColumnDetails):
         let originalData = row[dataEntity.fieldName];
 
         if (dataEntity.metadata.type === "date") {
-          modifiedRow[dataEntity.fieldName] = moment(originalData).format(dataEntity.metadata.dateFormat || DefaultDateFormat);
+          const modDate = moment.utc(originalData).format(dataEntity.metadata.dateFormat || DefaultDateFormat);
+          
+          console.log("Received original date ", originalData);
+          console.log("Modified original date ", modDate);
+
+          modifiedRow[dataEntity.fieldName] = modDate;
         }
 
         if (dataEntity.metadata.type === "dateTime") {
-          modifiedRow[dataEntity.fieldName] = moment(originalData).format(dataEntity.metadata.dateFormat || DefaultDateTimeFormat);
+          const modDateTime = moment.utc(originalData).format(dataEntity.metadata.dateFormat || DefaultDateTimeFormat);
+
+          console.log("Received original dateTime ", originalData);
+          console.log("Modified original dateTime ", modDateTime);
+
+          modifiedRow[dataEntity.fieldName] = modDateTime;
         }
 
         if (dataEntity.metadata.type === "boolean") {
