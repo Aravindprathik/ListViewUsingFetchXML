@@ -1,21 +1,44 @@
 import { useCollection } from "@cloudscape-design/collection-hooks";
-import { Calendar, CollectionPreferencesProps, DateInput, FormField, Header, Pagination, PropertyFilter, PropertyFilterProps, Table, TableProps } from "@cloudscape-design/components";
+import {
+  Calendar,
+  CollectionPreferencesProps,
+  DateInput,
+  FormField,
+  Header,
+  Pagination,
+  PropertyFilter,
+  PropertyFilterProps,
+  Table,
+  TableProps,
+} from "@cloudscape-design/components";
 import * as React from "react";
-import { Preferences, TableEmptyState, TableNoMatchState, getMatchesCountText, paginationAriaLabels, propertyFilterI18nStrings } from "../GenericComponents/Utils";
+import {
+  Preferences,
+  TableEmptyState,
+  TableNoMatchState,
+  getMatchesCountText,
+  paginationAriaLabels,
+  propertyFilterI18nStrings,
+} from "../GenericComponents/Utils";
 import { ColumnDataType, DataEntity, DynamicColumnDetails } from "./CloudscapeInterface";
-import { BLANK_SEARCH_AND, extractFieldNamesForDefaultVisibleContent, generateColumnDefinitions, generateVisibleContentOptions, modifyRowData } from "./CloudscapeTableConfig";
+import {
+  BLANK_SEARCH_AND,
+  extractFieldNamesForDefaultVisibleContent,
+  generateColumnDefinitions,
+  generateVisibleContentOptions,
+  modifyRowData,
+} from "./CloudscapeTableConfig";
 import moment from "moment-timezone";
 import { IInputs } from "../../generated/ManifestTypes";
 
 export interface CloudscapeGenericTableProps {
   primaryEntity: string;
-  pcfContext: ComponentFramework.Context<IInputs> | null,
+  pcfContext: ComponentFramework.Context<IInputs> | null;
   allColumns: DynamicColumnDetails;
   allItems: any[];
   itemsPerPage: number;
 }
 export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ primaryEntity, pcfContext, allColumns, allItems, itemsPerPage }) => {
-
   const [tableRowData, setTableRowData] = React.useState<any[]>([]);
   const [tableColumnDefinitions, setTableColumnDefinitions] = React.useState<TableProps.ColumnDefinition<any>[]>([]);
 
@@ -25,7 +48,7 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
   const [query, setQuery] = React.useState(BLANK_SEARCH_AND);
 
   React.useEffect(() => {
-    console.log('Cloudscape Table');
+    console.log("Cloudscape Table");
   }, []);
 
   React.useEffect(() => {
@@ -37,7 +60,7 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
   React.useEffect(() => {
     if (allColumns) {
       const columnDefinitions = generateColumnDefinitions(allColumns, pcfContext, primaryEntity);
-      console.log("Table Col Definitions ", columnDefinitions);
+      console.log("Table Col Definitions ", JSON.stringify(columnDefinitions));
       setTableColumnDefinitions(columnDefinitions);
 
       const parsedData = modifyRowData(allItems, allColumns);
@@ -121,7 +144,13 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
         }
         {...collectionProps}
         pagination={<Pagination {...paginationProps} ariaLabels={paginationAriaLabels(paginationProps.pagesCount)} />}
-        preferences={<Preferences preferences={tableDefaultPreferences} setPreferences={setTableDefaultPreferences} visibleContentOptions={generateVisibleContentOptions(allColumns)} />}
+        preferences={
+          <Preferences
+            preferences={tableDefaultPreferences}
+            setPreferences={setTableDefaultPreferences}
+            visibleContentOptions={generateVisibleContentOptions(allColumns)}
+          />
+        }
       />
     </>
   );
@@ -139,8 +168,27 @@ export function generateFilteringProperties(dynamicColumnDetails: DynamicColumnD
       } else if (dataType === "number") {
         operators = ["=", "!=", "<", "<=", ">", ">="];
       } else if (dataType === "date") {
-        operators = [":", "!:", "=", "!="];
-      } else if(dataType === "dateTime") {
+        operators = ["=", "!=", "<", "<=", ">", ">="].map((operator) => ({
+          operator,
+          form: ({ value, onChange }) => {
+
+            const onDateChange = (value: any) => {
+              // const mm = moment(value).format("MM/DD/YYYY");
+              // console.log('onDateChange ', mm);
+              onChange(value);
+            }
+            return (
+              <div className="date-form">
+                <FormField>
+                  <DateInput value={value ?? ""} onChange={(event) => onDateChange(event.detail.value)} placeholder="YYYY/MM/DD" />
+                </FormField>
+                <Calendar value={value ?? ""} onChange={(event) => onDateChange(event.detail.value)} locale="en-US" />
+              </div>
+            );
+          },
+          match: "date",
+        }));
+      } else if (dataType === "dateTime") {
         operators = [":", "!:", "=", "!="];
       } else {
         operators = [":", "!:", "=", "!="];
