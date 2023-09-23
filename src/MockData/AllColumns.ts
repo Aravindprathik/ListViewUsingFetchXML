@@ -3,7 +3,7 @@ import { DynamicColumnDetails } from "../Components/CloudscapeTable/CloudscapeIn
 export const MOCK_KPI_ALL_COLUMNS: DynamicColumnDetails = {
   columnInfo: { 
     tableName: "All Open Sales Support Cases", 
-    sortingColumn: "modifiedon", 
+    sortingColumn: "modifiedonDate", 
     sortingColumnDataType: "date",
     isAscending: true 
   },
@@ -36,7 +36,7 @@ export const MOCK_KPI_ALL_COLUMNS: DynamicColumnDetails = {
       metadata: { type: "date", dateFormat: "MM/DD/YYYY" },
     },
     {
-      fieldName: "modifiedon",
+      fieldName: "modifiedonDate",
       displayName: "Modified Date",
       isColumnVisible: false,
       isFilterable: true,
