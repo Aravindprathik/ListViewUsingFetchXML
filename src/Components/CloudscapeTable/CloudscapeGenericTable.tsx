@@ -168,26 +168,7 @@ export function generateFilteringProperties(dynamicColumnDetails: DynamicColumnD
       } else if (dataType === "number") {
         operators = ["=", "!=", "<", "<=", ">", ">="];
       } else if (dataType === "date") {
-        operators = ["=", "!=", "<", "<=", ">", ">="].map((operator) => ({
-          operator,
-          form: ({ value, onChange }) => {
-
-            const onDateChange = (value: any) => {
-              // const mm = moment(value).format("MM/DD/YYYY");
-              // console.log('onDateChange ', mm);
-              onChange(value);
-            }
-            return (
-              <div className="date-form">
-                <FormField>
-                  <DateInput value={value ?? ""} onChange={(event) => onDateChange(event.detail.value)} placeholder="YYYY/MM/DD" />
-                </FormField>
-                <Calendar value={value ?? ""} onChange={(event) => onDateChange(event.detail.value)} locale="en-US" />
-              </div>
-            );
-          },
-          match: "date",
-        }));
+        operators = [":", "!:", "=", "!="];
       } else if (dataType === "dateTime") {
         operators = [":", "!:", "=", "!="];
       } else {

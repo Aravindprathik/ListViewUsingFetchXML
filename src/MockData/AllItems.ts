@@ -17,7 +17,7 @@ export const MOCK_KPI_ALL_ITEMS: any[] = [
     createdonDateTime: "9/14/2023 4:23 AM",
     createdon: "2023-09-14T08:23:41Z",
     modifiedonDateTime: "9/14/2023 4:23 AM",
-    modifiedonDate: "2023-09-14T08:23:57Z",
+    modifiedonDate: "2022-09-14T08:23:57Z",
     "_cb_casestatus_value@OData.Community.Display.V1.FormattedValue": "New - SSR",
     "_cb_casestatus_value@Microsoft.Dynamics.CRM.associatednavigationproperty": "cb_CaseStatus",
     "_cb_casestatus_value@Microsoft.Dynamics.CRM.lookuplogicalname": "cb_opportunitymasterdata",
